@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	style="@style/SourceListItem.Container"
+	android:orientation="horizontal"
+	>
+
+	<ImageView
+		style="@style/SourceListItem.Icon"
+		app:srcCompat="@drawable/ic_item_source"
+		/>
+	<TextView
+		style="@style/SourceListItem.Label"
+		android:id="@+id/name"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:layout_gravity="center_vertical"
+
+		android:text="@string/lbl_source_default"
+		/>
+
+	<!--<ImageButton-->
+		<!--style="@style/SourceListItem.Button"-->
+		<!--android:id="@+id/edit"-->
+		<!--android:layout_gravity="center_vertical"-->
+		<!--android:src="@android:drawable/ic_menu_edit"-->
+		<!--/>-->
+</LinearLayout>

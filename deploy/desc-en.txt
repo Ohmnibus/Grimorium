@@ -1,0 +1,86 @@
+## Title:30 ##
+Grimorium for AD&D
+
+## Promo Text:80 ##
+The browser for AD&D spells and prayers
+
+## Description:4000 ##
+
+An handy reference to AD&D 2nd edition spells.
+
+- Access multiple online spell libraries
+- Powerful filtering system
+- Search while typing
+- Create any number of wizards or priests
+- Define a different filter for each wizard or priest
+- Mark favourite spells for each wizard or priest
+
+## Recent Changes:500 ##
+
+## APPIA ##
+
+## Keywords:10 ##
+AD&D, Spell, Spells, Reference, Spellbook, Rpg
+
+## Version History ##
+0.9.1.12 (25)
+Disabled ADs while inspecting on In-App purchase issues
+
+0.9.1.11 (24)
+Fix compatibility issues with Android 13
+
+0.9.1.10 (23)
+Fix compatibility issues with "Oreo" (hopefully)
+
+0.9.1.9 (22)
+Fix compatibility issues with "Oreo"
+
+0.9.1.8 (21)
+Add privacy policy in about dialog
+Upgrade build target to 28
+
+0.9.1.7 (20)
+Fix SpellDetailFragment.setSpell (not reproduced)
+Add missing School "Mentalism"
+Show spheres in place of schools for prayers (main list)
+
+0.9.1.6 (19)
+Add missing Schools from Spells & Magic
+Fix IabHelper
+Fix SourceListActivity.hideProgressDialog (not reproduced)
+Fix SpellFormatter.formatBody
+Fix SpellListActivity.onActivityResult (not reproduced)
+
+0.9.1.5 (18)
+Fix ads size
+Fix screen rotation with open MultiSelectList pref.
+Migrate to official MultiSelectList pref.
+Migrate Crash Reporting to Crashlytics
+Fix duplicate spells after ads
+
+0.9.1.4 (17)
+Fix ads
+
+0.9.1.3 (16)
+Fix missing reference books in spell filter
+Fix selection of newly added magic user
+Fix select all spell levels
+Migrate Native Ads (discontinued) to Banner Ads
+Clean up some code, remove unused resources
+Remove reference to "FirebaseCrash" class in "free" flavour
+Fix NRE on DBManager instance
+Fix "FragmentManagerImpl.checkStateLoss" (maybe)
+Fix "No view found for id 0x7f09004d (net.ohmnibus.grimorium.adnd:id/fragment_container)"
+
+0.9.1.2 (15)
+Add Firebase crash report
+Fix IllegalStateException in SpellListActivity.java
+Fix IllegalStateException in SourceListActivity.java
+Fix refresh of sources list in spell filter
+
+0.9.1 (14)
+Fix share function on aboutbox
+Fix minor flaws in iab
+Add AboutBox
+Fix first tap on empty spell list
+Add loaders in adapters

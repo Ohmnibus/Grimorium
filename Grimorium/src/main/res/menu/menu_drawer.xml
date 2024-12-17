@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	  xmlns:app="http://schemas.android.com/apk/res-auto">
+	<item android:title="@string/mnu_drawer_mgmt">
+		<menu>
+			<item android:id="@+id/mnuDrawerProfiles"
+				  android:title="@string/mnu_drawer_profiles"
+				  android:icon="@drawable/ic_menu_account"
+				  app:showAsAction="ifRoom" />
+
+			<item android:id="@+id/mnuDrawerSources"
+				  android:title="@string/mnu_drawer_sources"
+				  android:icon="@drawable/ic_menu_sources"
+				  app:showAsAction="ifRoom" />
+		</menu>
+	</item>
+	<item android:id="@+id/mnuDrawerPurchase"
+		  android:title="@string/mnu_drawer_purchase">
+		<menu>
+			<item android:id="@+id/mnuDrawerIab"
+				  android:title="@string/mnu_drawer_iab"
+				  android:icon="@drawable/ic_menu_iab"
+				  app:showAsAction="ifRoom" />
+		</menu>
+	</item>
+	<item android:id="@+id/mnuDrawerSystem"
+		  android:title="@string/mnu_drawer_system">
+		<menu>
+			<item android:id="@+id/mnuDrawerAbout"
+				  android:title="@string/mnu_drawer_about"
+				  android:icon="@drawable/ic_menu_info"
+				  app:showAsAction="ifRoom" />
+		</menu>
+	</item>
+</menu>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<PreferenceCategory android:title="@string/pref_spell_type">
+		<CheckBoxPreference
+			android:key="KEY_TYPE_WIZARDS"
+			android:title="@string/pref_wizards_title"
+			android:summary="@string/pref_wizards_on"
+			android:defaultValue="true"
+			android:persistent="false"
+			/>
+
+		<CheckBoxPreference
+			android:key="KEY_TYPE_PRIESTS"
+			android:title="@string/pref_priests_title"
+			android:summary="@string/pref_priests_on"
+			android:defaultValue="true"
+			android:persistent="false"
+			/>
+
+		<MultiSelectListPreference
+			android:key="KEY_SOURCES"
+			android:title="@string/pref_sources_title"
+			android:summary="@string/pref_sources"
+			android:dialogTitle="@string/pref_sources_title"
+			android:persistent="false"
+			/>
+
+		<MultiSelectListPreference
+			android:key="KEY_BOOKS"
+			android:title="@string/pref_books_title"
+			android:summary="@string/pref_books"
+			android:dialogTitle="@string/pref_books_title"
+			app:entries="@array/BooksList"
+			app:entryValues="@array/BooksList"
+			android:defaultValue="@array/BooksList"
+			android:persistent="false"
+			/>
+
+		<CheckBoxPreference
+			android:key="KEY_STARRED"
+			android:title="@string/pref_starred_title"
+			android:summary="@string/pref_starred_on"
+			android:defaultValue="false"
+			android:persistent="false"
+			/>
+
+		<net.ohmnibus.grimorium.preference.ButtonPreference
+			android:key="KEY_STARRED_SHARE"
+			android:title="@string/pref_starred_share"
+			android:summary="@string/pref_starred_share_summary"
+			android:persistent="false"
+			android:icon="@drawable/ic_menu_share"
+			/>
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="@string/pref_spell_details">
+		<MultiSelectListPreference
+			android:key="KEY_LEVEL"
+			android:title="@string/pref_levels_title"
+			android:summary="@string/pref_levels"
+			android:dialogTitle="@string/pref_levels_title"
+			app:entries="@array/LevelsList"
+			app:entryValues="@array/LevelsList"
+			android:defaultValue="@array/LevelsList"
+			android:persistent="false"
+			/>
+
+		<MultiSelectListPreference
+			android:key="KEY_SCHOOLS"
+			android:title="@string/pref_schools_title"
+			android:summary="@string/pref_schools"
+			android:dialogTitle="@string/pref_schools_title"
+			app:entries="@array/SchoolsList"
+			app:entryValues="@array/SchoolsList"
+			android:defaultValue="@array/SchoolsList"
+			android:persistent="false"
+			/>
+
+		<MultiSelectListPreference
+			android:key="KEY_SPHERES"
+			android:title="@string/pref_spheres_title"
+			android:summary="@string/pref_spheres"
+			android:dependency="KEY_TYPE_PRIESTS"
+			android:dialogTitle="@string/pref_spheres_title"
+			app:entries="@array/SpheresList"
+			app:entryValues="@array/SpheresList"
+			android:defaultValue="@array/SpheresList"
+			android:persistent="false"
+			/>
+
+		<CheckBoxPreference
+			android:key="KEY_COMPO_VERBAL"
+			android:title="@string/pref_verbal_title"
+			android:summary="@string/pref_verbal_on"
+			android:defaultValue="true"
+			android:persistent="false"
+			/>
+
+		<CheckBoxPreference
+			android:key="KEY_COMPO_SOMATIC"
+			android:title="@string/pref_somatic_title"
+			android:summary="@string/pref_somatic_on"
+			android:defaultValue="true"
+			android:persistent="false"
+			/>
+
+		<CheckBoxPreference
+			android:key="KEY_COMPO_MATERIAL"
+			android:title="@string/pref_material_title"
+			android:summary="@string/pref_material_on"
+			android:defaultValue="true"
+			android:persistent="false"
+			/>
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="@string/pref_spell_reset">
+		<net.ohmnibus.grimorium.preference.ResetPreference
+			android:key="KEY_RESET"
+			android:title="@string/pref_reset_title"
+			android:summary="@string/pref_reset"
+			android:dialogMessage="@string/pref_reset_message"
+			android:persistent="false"
+			android:positiveButtonText="@string/lbl_ok"
+			android:negativeButtonText="@string/lbl_cancel"
+			/>
+	</PreferenceCategory>
+
+</PreferenceScreen>

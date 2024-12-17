@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	tools:context="net.ohmnibus.grimorium.fragment.ProfileDetailFragment">
+
+	<!--<WebView style="@style/SpellDetails.WebView"-->
+			 <!--android:id="@+id/webView"-->
+			 <!--android:layout_width="match_parent"-->
+			 <!--android:layout_height="wrap_content"-->
+		<!--/>-->
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:layout_constraintGuide_percent="0.50"
+			android:orientation="vertical"/>
+
+		<TextView
+			android:id="@+id/tv_name_label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintLeft_toLeftOf="parent"
+			tools:text="Name"/>
+
+		<TextView
+			android:id="@+id/tv_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintLeft_toRightOf="@+id/guideline"
+			tools:text="Name"/>
+
+		<TextView
+			android:id="@+id/tv_stars_label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:layout_constraintTop_toBottomOf="@+id/tv_name_label"
+			app:layout_constraintLeft_toLeftOf="@+id/tv_name_label"
+			tools:text="Stars"/>
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>
+<!--<android.support.constraint.ConstraintLayout-->
+	<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+	<!--xmlns:tools="http://schemas.android.com/tools"-->
+	<!--android:layout_width="match_parent"-->
+	<!--android:layout_height="match_parent">-->
+
+<!--</android.support.constraint.ConstraintLayout>-->

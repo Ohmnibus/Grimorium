@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:state_selected="true">
+		<color android:color="@color/primary_light" />
+	</item>
+	<!--<item android:drawable="?android:attr/selectableItemBackground" />-->
+	<item android:drawable="@android:drawable/list_selector_background">
+		<color android:color="@android:color/transparent" />
+	</item>
+
+	<!--<item>-->
+		<!--<selector>-->
+			<!--<item android:state_activated="true">-->
+				<!--<color android:color="@color/primary_light"/>-->
+			<!--</item>-->
+			<!--<item>-->
+				<!--<color android:color="@android:color/transparent"/>-->
+			<!--</item>-->
+		<!--</selector>-->
+	<!--</item>-->
+	<!--<item android:drawable="@android:drawable/list_selector_background"/>-->
+</selector>

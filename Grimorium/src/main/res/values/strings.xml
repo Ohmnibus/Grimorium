@@ -1,0 +1,382 @@
+<resources>
+
+	<string name="app_name">Grimorium Free</string>
+	<!--<string name="app_copy">© 2017 Ohmnibus</string>-->
+	<string name="app_author" translatable="false">Ohmnibus</string>
+	<string name="app_facebook" translatable="false">OhmnibusProductions</string>
+	<string name="app_twitter" translatable="false">\@Ohmnibus</string>
+	<string name="app_website" translatable="false" /><!-- TODO -->
+	<string name="app_email" translatable="false">ohmnibus@gmail.com</string>
+	<string name="app_email_subject" translatable="false">[Grimorium]</string>
+	<string name="app_share">Try %1$s!\nhttp://play.google.com/store/apps/details?id=%2$s</string>
+	<string name="company_website" translatable="false">http://www.ohmnibus.net/en/</string>
+	<string name="app_privacy" translatable="false" />
+	<string name="app_acknowledgment" translatable="false" />
+
+	<!--<string name="about_version">Version</string>-->
+	<!--<string name="about_changelog">Changelog</string>-->
+	<!--<string name="about_review">Review</string>-->
+	<!--<string name="about_share">Share</string>-->
+	<!--<string name="about_share_message">Share</string>-->
+	<!--<string name="about_contact">Contact support</string>-->
+	<string name="about_title">About %s</string>
+
+	<string name="lblMainTitle">Grimorium - %s</string>
+
+	<string name="lbl_type_m">M</string>
+	<string name="lbl_type_c">C</string>
+	<string name="lbl_type_u">\?</string>
+
+	<string name="lbl_type_mage">Wizards</string>
+	<string name="lbl_type_cleric">Priests</string>
+	<string name="lbl_type_undefined">Unknown</string>
+
+	<string name="lbl_spell_reversible">Reversible</string>
+
+	<string name="lbl_compo_v">V</string>
+	<string name="lbl_compo_s">S</string>
+	<string name="lbl_compo_m">M</string>
+
+	<string name="lbl_compo_verbal">Verbal</string>
+	<string name="lbl_compo_somatic">Somatic</string>
+	<string name="lbl_compo_material">Material</string>
+
+	<string name="lbl_book_unknown">[Unknown]</string>
+	<string name="lbl_book_base">Player\'s Handbook</string>
+	<string name="lbl_book_tome">Tome of Magic</string>
+	<string name="lbl_book_wizards">Complete Wizard\'s Handbook</string>
+	<string name="lbl_book_priests">The Complete Priest\'s Handbook</string>
+	<string name="lbl_book_spells">Spells &amp; Magic</string>
+	<string name="lbl_book_adventures">Forgotten Realms \"Adventures\"</string>
+	<string name="lbl_book_custom">Custom spell</string>
+	<string name="lbl_book_carnal">The Carnal Knowledge Guide</string>
+	<string name="lbl_book_alcohol">The Net Alcohol Guide</string>
+
+	<string name="lbl_school_all">All Schools</string>
+	<string name="lbl_school_abjuration">Abjuration</string>
+	<string name="lbl_school_alteration">Alteration</string>
+	<string name="lbl_school_conjuration">Conjuration/Summoning</string>
+	<string name="lbl_school_divination">Divination</string>
+	<string name="lbl_school_enchantment">Enchantment/Charm</string>
+	<string name="lbl_school_illusion">Illusion/Phantasm</string>
+	<string name="lbl_school_evocation">Invocation/Evocation</string>
+	<string name="lbl_school_necromancy">Necromancy</string>
+	<string name="lbl_school_dimensional">Dimension</string>
+	<string name="lbl_school_air">Elemental (Air)</string>
+	<string name="lbl_school_earth">Elemental (Earth)</string>
+	<string name="lbl_school_fire">Elemental (Fire)</string>
+	<string name="lbl_school_water">Elemental (Water)</string>
+	<string name="lbl_school_force">Force</string>
+	<string name="lbl_school_mentalism">Mentalism</string>
+	<string name="lbl_school_shadow">Shadow</string>
+	<string name="lbl_school_alchemy">Alchemy</string>
+	<string name="lbl_school_artifice">Artifice</string>
+	<string name="lbl_school_geometry">Geometry</string>
+	<string name="lbl_school_song">Song</string>
+	<string name="lbl_school_wild">Wild Magic</string>
+
+	<string name="lbl_sphere_all">All</string>
+	<string name="lbl_sphere_astral">Astral</string>
+	<string name="lbl_sphere_charm">Charm</string>
+	<string name="lbl_sphere_combat">Combat</string>
+	<string name="lbl_sphere_creation">Creation</string>
+	<string name="lbl_sphere_divination">Divination</string>
+	<string name="lbl_sphere_guardian">Guardian</string>
+	<string name="lbl_sphere_healing">Healing</string>
+	<string name="lbl_sphere_necromantic">Necromantic</string>
+	<string name="lbl_sphere_protection">Protection</string>
+	<string name="lbl_sphere_summoning">Summoning</string>
+	<string name="lbl_sphere_animal">Animal</string>
+	<string name="lbl_sphere_elemental_air">Elemental (Air)</string>
+	<string name="lbl_sphere_elemental_earth">Elemental (Earth)</string>
+	<string name="lbl_sphere_elemental_fire">Elemental (Fire)</string>
+	<string name="lbl_sphere_elemental_water">Elemental (Water)</string>
+	<string name="lbl_sphere_plant">Plant</string>
+	<string name="lbl_sphere_sun">Sun</string>
+	<string name="lbl_sphere_weather">Weather</string>
+	<string name="lbl_sphere_chaos">Chaos</string>
+	<string name="lbl_sphere_law">Law</string>
+	<string name="lbl_sphere_numbers">Numbers</string>
+	<string name="lbl_sphere_thought">Thought</string>
+	<string name="lbl_sphere_time">Time</string>
+	<string name="lbl_sphere_travelers">Travelers</string>
+	<string name="lbl_sphere_war">War</string>
+	<string name="lbl_sphere_wards">Wards</string>
+
+	<string name="navigation_drawer_open">Open navigation drawer</string>
+	<string name="navigation_drawer_close">Close navigation drawer</string>
+
+	<string name="mnu_main_search">Search spell</string>
+
+	<string name="mnu_drawer_mgmt">Management</string>
+	<string name="mnu_drawer_profiles">Magic Users</string>
+	<string name="mnu_drawer_sources">Spell libraries</string>
+	<string name="mnu_drawer_purchase">Purchase</string>
+	<string name="mnu_drawer_iab">Remove Advertisement</string>
+	<string name="mnu_drawer_system">System</string>
+	<string name="mnu_drawer_about">About</string>
+
+	<string name="mnu_source_update">Update</string>
+	<string name="mnu_source_delete">Delete</string>
+
+	<string name="mnu_spell_share">Share</string>
+
+	<string name="lbl_hint_search">Search</string>
+
+	<string name="lbl_ok">OK</string>
+	<string name="lbl_cancel">Cancel</string>
+	<string name="msg_not_found">Not found</string>
+
+	<string name="lbl_spell_filter">Spell filter</string>
+
+	<string name="lbl_profiles">Magic Users</string>
+	<string name="lbl_profile_default">Default</string>
+	<string name="lbl_profile_add">New magic user</string>
+	<string name="lbl_profile_hint">Enter magic user name</string>
+	<string name="lbl_profile_edit">Edit magic user</string>
+	<string name="lbl_profile_remove">Remove magic user</string>
+	<string name="lbl_profile_remove_msg">Proceed with removal of \"%s\"?\nThis cannot be undone.</string>
+	<string name="lbl_profile_spinner_add">&lt;New magic user&gt;</string>
+
+	<string name="lbl_source_default">Default</string>
+
+	<string name="lbl_source_manager">Grimorium - Spell Libraries</string>
+	<string name="lbl_source_title">Title</string>
+	<string name="lbl_source_description">Description</string>
+	<string name="lbl_source_add">Add spell library</string>
+	<string name="lbl_source_update">Update spell library</string>
+	<string name="lbl_source">Spell library</string>
+	<string name="lbl_source_hint">Enter spell library URL</string>
+	<string name="lbl_source_error">The spell library cannot be read for unknown cause.</string>
+	<string name="lbl_source_error_cannot_connect">Cannot find the spell library.</string>
+	<string name="lbl_source_error_cannot_read">Cannot read the spell library.</string>
+	<string name="lbl_source_error_format_unsupported">This spell library is too advanced. Try updating the app.</string>
+	<string name="lbl_source_error_format_invalid">This spell library is unreadable, maybe damaged by woodworms.</string>
+	<string name="lbl_source_error_no_connection">Connection not available.</string>
+	<string name="lbl_source_error_stale_data">No new spell to learn from this library.</string>
+	<string name="lbl_source_error_invalid_url">The address of the spell library is misspelled.</string>
+	<string name="lbl_source_loading">Learning spells from library</string>
+	<string name="lbl_source_loading_progress">Learned %1$d spells from library</string>
+	<string name="lbl_source_remove_title">Remove Spell Library</string>
+	<string name="lbl_source_remove_message">Are you sure to erase the entire Spell Library called \"%s\"?\nThis cannot be undone.</string>
+	<string name="lbl_source_no_data">No spell libraries available.\nTouch here to discover some new spell libraries.</string>
+	<string name="lbl_source_load_canceled">Ok, nevermind.</string>
+
+	<string name="lbl_spell_level_cantrip">Cantrip</string>
+	<string name="lbl_spell_level_orison">Orison</string>
+	<string name="lbl_spell_level_spell">%s level spell</string>
+	<string name="lbl_spell_level_prayer">%s level prayer</string>
+	<string name="lbl_spell_school">(%s)</string>
+	<string name="lbl_spell_sphere">Sphere</string>
+	<string name="lbl_spell_range">Range</string>
+	<string name="lbl_spell_compo">Component</string>
+	<string name="lbl_spell_duration">Duration</string>
+	<string name="lbl_spell_cast_time">Casting Time</string>
+	<string name="lbl_spell_area_effect">Area of Effect</string>
+	<string name="lbl_spell_saving">Saving Throw</string>
+	<string name="lbl_spell_book">-%s-</string>
+	<string name="lbl_spell_author">by %s</string>
+	<string name="lbl_spell_no_match">Alas, no spells or prayers match to your demands.</string>
+	<string name="lbl_spell_no_data">No spells or prayers available.\nTouch here to discover some new spell libraries.</string>
+
+	<string name="lbl_source_version">Version</string>
+	<string name="lbl_source_namespace">NameSpace</string>
+	<string name="lbl_source_uri">URL</string>
+	<string name="lbl_source_elements">Elements</string>
+
+	<string name="msg_iab_error_network">Network unavailable.\nPlease try again later.</string>
+	<string name="msg_iab_error_not_available">Billing service not available.</string>
+	<string name="msg_iab_error_busy">Another operation is pending.\nPlease try again later.</string>
+	<string name="msg_iab_error_unsupported">Operation is not supported.\nPlease update the app and try again.</string>
+	<string name="msg_iab_error_fatal">Unexpected error.\nPlease contact the developer and report the error code %d.</string>
+	<string name="msg_iab_error_fatal_refund">Unexpected error.\nPlease contact the developer for refunds if any payment was made.</string>
+	<string name="msg_iab_error_inventory">Cannot detect purchases.\nIf any purchase was made, please restart the app.\nIf the problem persists, please contact the developer.</string>
+	<string name="msg_iab_warning_wait">Purchase not yet confirmed.\nRestart the app after a while to check for confirmation.\nIf the purchase is not confirmed within 5 days, please contact the developer.</string>
+	<string name="msg_pref_no_starred">No starred spells to share.</string>
+
+	<string name="lbl_disclaimer_title">Disclaimer</string>
+	<string name="lbl_disclaimer_agree">Agree</string>
+	<string name="lbl_disclaimer_disagree">Disagree</string>
+
+	<string name="lbl_wizards_spells">Wizards\' spells</string>
+	<string name="lbl_priests_spells">Priests\' spells</string>
+	<string name="lbl_profile_spellbook">%s\' spellbook</string>
+
+	<string name="pref_spell_type">Spell Type</string>
+	<string name="pref_wizards_title">Wizards\' spells</string>
+	<string name="pref_wizards_on">Show Wizards\' spells</string>
+	<string name="pref_wizards_off">Hide Wizards\' spells</string>
+	<string name="pref_priests_title">Priests\' spells</string>
+	<string name="pref_priests_on">Show Priests\' spells</string>
+	<string name="pref_priests_off">Hide Priests\' spells</string>
+	<string name="pref_sources_title">Spell Libraries</string>
+	<string name="pref_sources">Spell Libraries to take in account (%1$d/%2$d)</string>
+	<string name="pref_books_title">Reference books</string>
+	<string name="pref_books">Reference books to take in account (%1$d/%2$d)</string>
+	<string name="pref_starred_title">Starred spells</string>
+	<string name="pref_starred_on">Show starred spells only</string>
+	<string name="pref_starred_off">Show all spells</string>
+	<string name="pref_starred_share">Share starred spells</string>
+	<string name="pref_starred_share_summary">Share starred spells as a text list</string>
+
+	<string name="pref_spell_details">Spell Details</string>
+	<string name="pref_levels_title">Spell levels</string>
+	<string name="pref_levels">Spell levels to show (%1$d/%2$d)</string>
+	<string name="pref_schools_title">Schools</string>
+	<string name="pref_schools">Spell schools to take in account (%1$d/%2$d)</string>
+	<string name="pref_spheres_title">Spheres</string>
+	<string name="pref_spheres">Spell spheres to take in account (%1$d/%2$d)</string>
+	<string name="pref_verbal_title">Verbal component</string>
+	<string name="pref_verbal_on">Don\'t filter spells with verbal component</string>
+	<string name="pref_verbal_off">Filter spells with verbal component</string>
+	<string name="pref_somatic_title">Somatic component</string>
+	<string name="pref_somatic_on">Don\'t filter spells with somatic component</string>
+	<string name="pref_somatic_off">Filter spells with somatic component</string>
+	<string name="pref_material_title">Material component</string>
+	<string name="pref_material_on">Don\'t filter spells with material component</string>
+	<string name="pref_material_off">Filter spells with material component</string>
+
+	<string name="pref_spell_reset">Reset filter</string>
+	<string name="pref_reset_title">Reset filter</string>
+	<string name="pref_reset">Reset filter to it\'s original value</string>
+	<string name="pref_reset_message">Reset all the filter values?</string>
+
+	<string-array name="BooksList" translatable="false">
+		<item>@string/lbl_book_base</item>
+		<item>@string/lbl_book_tome</item>
+		<item>@string/lbl_book_wizards</item>
+		<item>@string/lbl_book_priests</item>
+		<item>@string/lbl_book_spells</item>
+		<item>@string/lbl_book_adventures</item>
+		<item>@string/lbl_book_custom</item>
+		<item>@string/lbl_book_carnal</item>
+		<item>@string/lbl_book_alcohol</item>
+	</string-array>
+
+	<string-array name="LevelsList">
+		<item>Cantrip/Orison</item>
+		<item>First</item>
+		<item>Second</item>
+		<item>Third</item>
+		<item>Fourth</item>
+		<item>Fifth</item>
+		<item>Sixth</item>
+		<item>Seventh</item>
+		<item>Eighth</item>
+		<item>Ninth</item>
+		<item>Tenth</item>
+		<item>Quest</item>
+	</string-array>
+
+	<string-array name="SchoolsList" translatable="false">
+		<item>@string/lbl_school_abjuration</item>
+		<item>@string/lbl_school_alteration</item>
+		<item>@string/lbl_school_conjuration</item>
+		<item>@string/lbl_school_divination</item>
+		<item>@string/lbl_school_enchantment</item>
+		<item>@string/lbl_school_illusion</item>
+		<item>@string/lbl_school_evocation</item>
+		<item>@string/lbl_school_necromancy</item>
+		<item>@string/lbl_school_dimensional</item>
+		<item>@string/lbl_school_air</item>
+		<item>@string/lbl_school_earth</item>
+		<item>@string/lbl_school_fire</item>
+		<item>@string/lbl_school_water</item>
+		<item>@string/lbl_school_force</item>
+		<item>@string/lbl_school_mentalism</item>
+		<item>@string/lbl_school_shadow</item>
+		<item>@string/lbl_school_alchemy</item>
+		<item>@string/lbl_school_artifice</item>
+		<item>@string/lbl_school_geometry</item>
+		<item>@string/lbl_school_song</item>
+		<item>@string/lbl_school_wild</item>
+	</string-array>
+
+	<string-array name="SpheresList" translatable="false">
+		<item>@string/lbl_sphere_astral</item>
+		<item>@string/lbl_sphere_charm</item>
+		<item>@string/lbl_sphere_combat</item>
+		<item>@string/lbl_sphere_creation</item>
+		<item>@string/lbl_sphere_divination</item>
+		<item>@string/lbl_sphere_guardian</item>
+		<item>@string/lbl_sphere_healing</item>
+		<item>@string/lbl_sphere_necromantic</item>
+		<item>@string/lbl_sphere_protection</item>
+		<item>@string/lbl_sphere_summoning</item>
+		<item>@string/lbl_sphere_animal</item>
+		<item>@string/lbl_sphere_elemental_air</item>
+		<item>@string/lbl_sphere_elemental_earth</item>
+		<item>@string/lbl_sphere_elemental_fire</item>
+		<item>@string/lbl_sphere_elemental_water</item>
+		<item>@string/lbl_sphere_plant</item>
+		<item>@string/lbl_sphere_sun</item>
+		<item>@string/lbl_sphere_weather</item>
+		<item>@string/lbl_sphere_chaos</item>
+		<item>@string/lbl_sphere_law</item>
+		<item>@string/lbl_sphere_numbers</item>
+		<item>@string/lbl_sphere_thought</item>
+		<item>@string/lbl_sphere_time</item>
+		<item>@string/lbl_sphere_travelers</item>
+		<item>@string/lbl_sphere_war</item>
+		<item>@string/lbl_sphere_wards</item>
+	</string-array>
+
+	<string-array name="sources_default_url" translatable="false">
+		<item>https://goo.gl/45wueO</item><!--<item>http://www.ohmnibus.net/Grimorium/ADnD/Mage.list.json</item>-->
+		<item>https://goo.gl/Xgq90e</item><!--<item>http://www.ohmnibus.net/Grimorium/ADnD/Priest.list.json</item>-->
+		<item>https://goo.gl/lPmMOK</item><!--<item>http://www.ohmnibus.net/Grimorium/ADnD/gnsb.json</item>-->
+		<item>https://goo.gl/Rdkius</item><!--<item>http://www.ohmnibus.net/Grimorium/ADnD/gnpb.json</item>-->
+	</string-array>
+	<string-array name="sources_default_lbl">
+		<item>Official Wizard Spells</item>
+		<item>Official Priest Spells</item>
+		<item>The Great Net Spellbook</item>
+		<item>The Great Net Prayerbook</item>
+	</string-array>
+	<string-array name="sources_default_disclaimer">
+		<item>This material is protected by copyright.\n\nBy proceeding you agree to be the solely responsible of any copyright violation.\n\nTo access this document you must possess a copy of each of following books:\n- Player\'s Handbook\n- Tome of Magic\n- Complete Wizard\'s Handbook\n- Spells &amp; Magic\n- Forgotten Realms \"Adventures\"</item>
+		<item>This material is protected by copyright.\n\nBy proceeding you agree to be the solely responsible of any copyright violation.\n\nTo access this document you must possess a copy of each of following books:\n- Player\'s Handbook\n- Tome of Magic\n- Spells &amp; Magic</item>
+		<item />
+		<item />
+	</string-array>
+
+	<string name="lbl_foo_level" translatable="false">1°</string>
+	<string name="lbl_foo_level_long" translatable="false">First level spell</string>
+	<string name="lbl_foo_name" translatable="false">Magic missile</string>
+	<string name="lbl_foo_compos" translatable="false">V, S, M</string>
+	<string name="lbl_foo_school" translatable="false">(Abjuration, Conjuration/Summoning)</string>
+	<string name="lbl_foo_sphere" translatable="false">Combat</string>
+	<string name="lbl_foo_range" translatable="false">60 yds. + 10 yds./level</string>
+	<string name="lbl_foo_duration" translatable="false">Instantaneous</string>
+	<string name="lbl_foo_cast_time" translatable="false">1</string>
+	<string name="lbl_foo_area_effect" translatable="false">1-5 targets</string>
+	<string name="lbl_foo_saving" translatable="false">None</string>
+	<string name="lbl_foo_book" translatable="false">-Player\'s Handbook-</string>
+	<string name="lbl_foo_author" translatable="false">by Ohmnibus</string>
+
+	<string name="egab_leave_review">Leave Review</string>
+	<string name="egab_contact_support">Contact Support</string>
+	<string name="egab_try_other_apps">Try Other Apps</string>
+	<string name="egab_version">Version</string>
+	<string name="egab_changelog">Changelog</string>
+	<string name="egab_facebook_label">Facebook</string>
+	<string name="egab_twitter_label">Twitter</string>
+	<string name="egab_web_label">Web</string>
+	<string name="egab_acknowledgements">Acknowledgements</string>
+	<string name="egab_privacy_policy">Privacy Policy</string>
+	<string name="egab_about_screen_title">About</string>
+	<string name="egab_share">Share</string>
+	<string name="egab_contact_log_event">Contact</string>
+	<string name="egab_review_log_event">Review</string>
+	<string name="egab_share_log_event">Share</string>
+	<string name="egab_try_other_app_log_event">Try Other Apps</string>
+	<string name="egab_facebook_log_event">Facebook</string>
+	<string name="egab_twitter_log_event">Twitter</string>
+	<string name="egab_website_log_event">Website</string>
+	<string name="egab_privacy_log_event">Privacy</string>
+	<string name="egab_acknowledgements_log_event">Acknowledgements</string>
+	<string name="egab_can_not_open">You don\'t have any app that can open this link</string>
+	<string name="egab_email_body_prompt">Please type your question here: </string>
+	<string name="egab_guide">Guide</string>
+	<string name="egab_licenses">Licenses</string>
+</resources>

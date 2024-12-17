@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout
+	style="@style/ListItem.Container"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content" >
+	
+	<!--<TextView-->
+		<!--style="@style/ListItem.Label.Type"-->
+		<!--android:id="@+id/lblType"-->
+
+		<!--android:layout_alignParentLeft="true"-->
+		<!--android:layout_alignParentTop="true"-->
+
+		<!--android:text="@string/lbl_type_m"-->
+		<!--android:textColor="#b0b0b0"-->
+		<!--/>-->
+	
+	<TextView
+		style="@style/ListItem.Label.Level"
+		android:id="@+id/lblLevel"
+
+		android:layout_alignParentStart="true"
+		android:layout_alignParentLeft="true"
+		android:layout_centerVertical="true"
+
+		android:text="@string/lbl_foo_level"
+		android:background="@drawable/bg_spell_type"
+		/>
+
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+
+		android:layout_alignParentStart="true"
+		android:layout_alignParentLeft="true"
+		android:layout_centerVertical="true"
+
+		android:orientation="vertical">
+		<TextView
+			style="@style/ListItem.Label.Name"
+			android:id="@+id/lblName"
+
+			android:layout_marginStart="48dp"
+			android:layout_marginLeft="48dp"
+
+			android:text="@string/lbl_foo_name"
+			/>
+
+		<TextView
+			style="@style/ListItem.Label.School"
+			android:id="@+id/lblSchool"
+
+			android:layout_marginStart="48dp"
+			android:layout_marginLeft="48dp"
+
+			android:text="@string/lbl_foo_school"/>
+	</LinearLayout>
+
+	<TextView
+		style="@style/ListItem.Label.Components"
+		android:id="@+id/lblCompos"
+
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentRight="true"
+		android:layout_centerVertical="true"
+
+		android:layout_marginEnd="48dp"
+		android:layout_marginRight="48dp"
+		
+		android:text="@string/lbl_foo_compos"
+		/>
+
+	<CheckBox
+		style="@style/ListItem.Button.Preferred"
+		android:id="@+id/cbxPreferred"
+
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentRight="true"
+		android:layout_centerVertical="true"
+		/>
+</RelativeLayout>
+</layout>

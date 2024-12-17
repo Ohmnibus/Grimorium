@@ -1,0 +1,14 @@
+<resources>
+
+	<style name="AppTheme.NoActionBar">
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
+		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
+		<item name="android:statusBarColor">@android:color/transparent</item>
+	</style>
+
+	<style name="ProfileListItem.Container.Base" parent="ListItem.Container">
+		<!--<item name="android:foreground">?android:attr/selectableItemBackground</item>-->
+		<item name="android:background">@drawable/bg_selectable</item>
+	</style>
+</resources>

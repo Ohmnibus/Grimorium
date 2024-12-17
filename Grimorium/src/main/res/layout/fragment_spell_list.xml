@@ -1,0 +1,22 @@
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:context="net.ohmnibus.grimorium.fragment.SpellListFragment"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	>
+	<androidx.recyclerview.widget.RecyclerView
+		tools:listitem="@layout/item_spell"
+
+		android:id="@+id/recyclerView"
+		android:name="net.ohmnibus.grimorium.fragment.SpellListFragment"
+
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+
+		app:layoutManager="LinearLayoutManager"
+		/>
+
+	<include layout="@layout/content_no_data"/>
+</FrameLayout>
