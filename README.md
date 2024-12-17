@@ -25,13 +25,18 @@ Each library contains an header and an array of spells.
 	"spells": [ ]
 }
 ```
+
 `format`: Is the format of the library. Only supported value is `1` so don't change it.
+
 `version`: Is the version of the library. Each time a change is made this value should advance,
 otherwise the app won't read the changes.
+
 `nameSpace`: Uniquely identifies the library. Each different library must have it's unique
 identifier. When loading a library, Grimorium will overwrite all the spells of the library
 with the same _nameSpace_.
+
 `description`: Full description of the library. HTML is allowed. Avoid external links.
+
 `spells`: The array of the spells defined in this library.
 
 ### Spells
@@ -60,6 +65,7 @@ Each spell in the `spells` array is defined as follow:
 
 `uid`: Unique identifier for the spell. This value must be unique for the _spell library_.
 Never use same `uid` for two spells in same library!!!
+
 `type`: Type of the spell.
 - `1`: Wizard spell
 - `2`: Priest spell.
@@ -70,6 +76,7 @@ Never use same `uid` for two spells in same library!!!
 - `11`: Quest level spell
 
 `name`: Name of the spell.
+
 `book`: Source book. Always use `Custom`. All supported values are:
 - `Base`: Player's Handbook
 - `Tome`: Tome of Magic
@@ -136,14 +143,21 @@ separated by a comma.
 - `Wards`: Wards
 
 `rng`: Range of the spell
+
 `compo`: Components of the spell. Either `V` for _verbal_, `S` for _somatic_ and `M` for
 _material_, or a mix of the three separated by a comma.
+
 `dur`: Duration of the spell
+
 `castime`: Casting time of the spell
+
 `aoe`: Area of Effect of the spell
+
 `saving`: Saving throw, if any, or `None`
+
 `body`: Description of the spell. HTML tags are allowed. Avoid external links. Add line breaks
 with the HTML tag `<br>`.
+
 `author`: Author of the spell. This attribute is optional and can be safely omitted.
 
 ## A word from the developer
