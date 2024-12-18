@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,15 +38,12 @@ implements View.OnClickListener,
 	public static final String ACTION_MANAGE = "ACTION_MANAGE";
 	public static final String EXTRA_SOURCE_CHANGED = "SourceChanged";
 	public static final int REQUEST_SOURCE_DETAIL = 1;
-	public static final int RESULT_SOURCE_CHANGED = RESULT_FIRST_USER;
 
 	public static final String BUNDLE_IS_LOADING = "BUNDLE_IS_LOADING";
 
+	@SuppressWarnings("FieldCanBeLocal")
 	private GrimoriumApp mApp;
 	private boolean twoPane;
-	private Toolbar mToolbar;
-	private ActionBar mActionBar;
-	private FloatingActionButton mFab;
 	private SourceListFragment mSourceListFragment;
 	private boolean mSourceChanged = false;
 	private SourceManager mSourceManager;
@@ -80,19 +79,19 @@ implements View.OnClickListener,
 
 		initTitle();
 
-		mFab = (FloatingActionButton) findViewById(R.id.fab);
-		mFab.setOnClickListener(this);
+		FloatingActionButton fab = findViewById(R.id.fab);
+		fab.setOnClickListener(this);
 
 		initSourceList();
 
 	}
 
 	private void initToolbar() {
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(mToolbar);
-		mActionBar = getSupportActionBar();
-		if (mActionBar != null) {
-			mActionBar.setDisplayHomeAsUpEnabled(true);
+		Toolbar toolbar = findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 	}
 
@@ -142,7 +141,7 @@ implements View.OnClickListener,
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean(BUNDLE_IS_LOADING, mIsLoading);
 	}
@@ -173,17 +172,17 @@ implements View.OnClickListener,
 	}
 
 	private void importSource(String rawUrl) {
+		mIsLoading = true;
 		showProgressDialog();
 
-		mIsLoading = true;
 		mSourceManager.startDownload(rawUrl);
 	}
 
 	@Override
 	public void onSourceImported(int created, int updated, int skipped, int deleted) {
+		mIsLoading = false;
 		hideProgressDialog();
 
-		mIsLoading = false;
 		mSourceChanged = true;
 		mSourceListFragment.refresh();
 	}
@@ -195,9 +194,9 @@ implements View.OnClickListener,
 
 	@Override
 	public void onSourceImportFailed(int errorCode) {
+		mIsLoading = false;
 		hideProgressDialog();
 
-		mIsLoading = false;
 		SourceManager.getErrorDialog(this, errorCode).show();
 	}
 
@@ -223,7 +222,6 @@ implements View.OnClickListener,
 	private void hideProgressDialog() {
 		mProgressDialog = (ProgressFragmentDialog) getSupportFragmentManager().findFragmentByTag(TAG_PROGRESS_DIALOG);
 		if (mProgressDialog != null) {
-			//mProgressDialog.dismiss();
 			mProgressDialog.dismissAllowingStateLoss();
 			mProgressDialog = null;
 		}
@@ -266,13 +264,6 @@ implements View.OnClickListener,
 				.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
 				.replace(R.id.fragment_container, fragment)
 				.commit();
-	}
-
-	/**
-	 * Remove the detail source fragment.
-	 */
-	protected void removeSourceDetailsFragment() {
-		removeSourceDetailsFragment(-1);
 	}
 
 	/**
@@ -322,7 +313,7 @@ implements View.OnClickListener,
 		}
 	}
 
-	@Override
+	//@Override
 	public void onDismiss(DialogInterface dialogInterface) {
 		if (mIsLoading) {
 			mSourceManager.cancelDownload();

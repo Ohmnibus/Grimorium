@@ -2,19 +2,13 @@ package net.ohmnibus.grimorium.database;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import net.ohmnibus.grimorium.R;
 import net.ohmnibus.grimorium.database.GrimoriumContract.SourceTable;
 import net.ohmnibus.grimorium.database.GrimoriumContract.SpellTable;
 import net.ohmnibus.grimorium.database.GrimoriumContract.ProfileTable;
 import net.ohmnibus.grimorium.database.GrimoriumContract.StarTable;
-import net.ohmnibus.grimorium.entity.Profile;
-import net.ohmnibus.grimorium.entity.Spell;
-import net.ohmnibus.grimorium.entity.SpellFilter;
-import net.ohmnibus.grimorium.legacy.ProfileManager;
 
 /**
  * Created by Ohmnibus on 10/09/2016.
@@ -25,7 +19,7 @@ public class GrimoriumDbHelper extends SQLiteOpenHelper {
 	public static final int DATABASE_VERSION = 3;
 	public static final String DATABASE_NAME = "Grimorium.db";
 
-	private Context mContext;
+	private final Context mContext;
 
 	public GrimoriumDbHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -89,14 +83,14 @@ public class GrimoriumDbHelper extends SQLiteOpenHelper {
 					SpellTable.COLUMN_NAME_BOOK_BITFIELD + TYPE_NUMBER + SEP_COMMA +
 					SpellTable.COLUMN_NAME_AUTHOR + TYPE_TEXT + SEP_COMMA +
 					SpellTable.COLUMN_NAME_DESCRIPTION + TYPE_TEXT + SEP_COMMA +
-					SpellTable.COLUMN_NAME_UPDATED + TYPE_NUMBER + //SEP_COMMA +
+					SpellTable.COLUMN_NAME_UPDATED + TYPE_NUMBER +
 					PAR_CLOSE;
 
 	private static final String SQL_CREATE_INDEX_SPELLS =
 			CMD_CREATE_INDEX + SpellTable.INDEX_NAME + ON + SpellTable.TABLE_NAME + PAR_OPEN +
 					SpellTable.COLUMN_NAME_TYPE + SEP_COMMA +
 					SpellTable.COLUMN_NAME_LEVEL + SEP_COMMA +
-					SpellTable.COLUMN_NAME_NAME + //SEP_COMMA +
+					SpellTable.COLUMN_NAME_NAME +
 					PAR_CLOSE;
 
 	private static final String SQL_CREATE_PROFILES =
@@ -112,12 +106,12 @@ public class GrimoriumDbHelper extends SQLiteOpenHelper {
 					ProfileTable.COLUMN_NAME_SPHERES + TYPE_NUMBER + SEP_COMMA +
 					ProfileTable.COLUMN_NAME_COMPONENTS + TYPE_NUMBER + SEP_COMMA +
 					ProfileTable.COLUMN_NAME_STARRED_ONLY + TYPE_NUMBER + SEP_COMMA +
-					ProfileTable.COLUMN_NAME_FILTERED_SOURCES + TYPE_TEXT + //SEP_COMMA +
+					ProfileTable.COLUMN_NAME_FILTERED_SOURCES + TYPE_TEXT +
 					PAR_CLOSE;
 
 	private static final String SQL_CREATE_INDEX_PROFILES =
 			CMD_CREATE_UNIQUE_INDEX + ProfileTable.INDEX_NAME + ON + ProfileTable.TABLE_NAME + PAR_OPEN +
-					ProfileTable.COLUMN_NAME_KEY + //SEP_COMMA +
+					ProfileTable.COLUMN_NAME_KEY +
 					PAR_CLOSE;
 
 	private static final String SQL_CREATE_STARS =
@@ -127,13 +121,13 @@ public class GrimoriumDbHelper extends SQLiteOpenHelper {
 					StarTable.COLUMN_NAME_SPELL_ID + TYPE_NUMBER + SEP_COMMA +
 					StarTable.COLUMN_NAME_STARRED + TYPE_NUMBER + SEP_COMMA +
 					StarTable.COLUMN_NAME_SOURCE_NS + TYPE_TEXT + SEP_COMMA +
-					StarTable.COLUMN_NAME_SPELL_UID + TYPE_NUMBER + //SEP_COMMA +
+					StarTable.COLUMN_NAME_SPELL_UID + TYPE_NUMBER +
 					PAR_CLOSE;
 
 	private static final String SQL_CREATE_INDEX_STARS = //TODO: Update if exists
 			CMD_CREATE_UNIQUE_INDEX + StarTable.INDEX_NAME + ON + StarTable.TABLE_NAME + PAR_OPEN +
 					StarTable.COLUMN_NAME_PROFILE_ID + SEP_COMMA +
-					StarTable.COLUMN_NAME_SPELL_ID + //SEP_COMMA +
+					StarTable.COLUMN_NAME_SPELL_ID +
 					PAR_CLOSE;
 
 	private static final String[] SQL_CREATE = new String[] {
@@ -191,25 +185,6 @@ public class GrimoriumDbHelper extends SQLiteOpenHelper {
 				ProfileTable.TABLE_NAME,
 				null,
 				values);
-
-		//Import legacy data - remove from production
-		Profile[] profiles = ProfileManager.getLegacyProfiles(mContext);
-		for (Profile profile : profiles) {
-			values = ProfileDbAdapter.getProfileCV(mContext, profile);
-			if (Profile.PROFILE_KEY_DEFAULT.equals(profile.getKey())) {
-				//Default profile
-				db.update(
-						ProfileTable.TABLE_NAME,
-						values,
-						ProfileTable.COLUMN_NAME_KEY + " = ?",
-						new String[] { Profile.PROFILE_KEY_DEFAULT });
-			} else {
-				db.insert(
-						ProfileTable.TABLE_NAME,
-						null,
-						values);
-			}
-		}
 	}
 
 	@Override

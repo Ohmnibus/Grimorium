@@ -1,12 +1,16 @@
 package net.ohmnibus.grimorium.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -89,18 +93,18 @@ public class SourceDetailFragment extends Fragment
 	}
 
 	@Override
-	public void onAttach(Context context) {
+	public void onAttach(@NonNull Context context) {
 		super.onAttach(context);
 		if (context instanceof OnFragmentInteractionListener) {
 			mListener = (OnFragmentInteractionListener) context;
 		} else {
-			throw new RuntimeException(context.toString()
+			throw new RuntimeException(context
 					+ " must implement OnFragmentInteractionListener");
 		}
 	}
 
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 
 		inflater.inflate(R.menu.menu_source_detail, menu);
@@ -109,21 +113,18 @@ public class SourceDetailFragment extends Fragment
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		switch (id) {
-			case R.id.mnuSourceDelete:
-				deleteSource();
-				break;
-			case R.id.mnuSourceUpdate:
-				updateSource();
-				break;
-			default:
-				return super.onOptionsItemSelected(item);
+		if (id == R.id.mnuSourceDelete) {
+			deleteSource();
+		} else if (id == R.id.mnuSourceUpdate) {
+			updateSource();
+		} else {
+			return super.onOptionsItemSelected(item);
 		}
 		return true;
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
+	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean(BUNDLE_IS_LOADING, mIsLoading);
 	}
@@ -132,14 +133,14 @@ public class SourceDetailFragment extends Fragment
 	public void onDetach() {
 		super.onDetach();
 		mListener = null;
-		//Log.i(TAG, "onDetach");
+		Log.d(TAG, "onDetach");
 	}
 
 	private void initViews(View root) {
 
 		mBinding = DataBindingUtil.bind(root);
 
-		setSource(mSourceId, true);
+		setSource(mSourceId);
 	}
 
 	public void setSourceId(long sourceId) {
@@ -153,11 +154,9 @@ public class SourceDetailFragment extends Fragment
 		return mSourceId;
 	}
 
-	private void setSource(long sourceId, boolean forceRefresh) {
-		if (!forceRefresh && sourceId == mSourceId) {
-			//No change
-			return;
-		}
+	@SuppressLint("SetTextI18n")
+	private void setSource(long sourceId) {
+
 		mSourceId = sourceId;
 
 		mSource = null;
@@ -203,21 +202,23 @@ public class SourceDetailFragment extends Fragment
 	}
 
 	private void deleteSource() {
+
 		if (mSource == null)
 			return;
 
-		new AlertDialog.Builder(getContext())
+		Context context = getContext();
+		if (context == null)
+			return;
+
+		new AlertDialog.Builder(context)
 				.setTitle(R.string.lbl_source_remove_title)
 				.setMessage(getString(R.string.lbl_source_remove_message, mSource.getName()))
-				.setPositiveButton(R.string.lbl_ok, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-						//TODO: Make Async
-						DbManager dbManager = GrimoriumApp.getInstance().getDbManager();
-						int affected = dbManager.getSourceDbAdapter().delete(mSourceId);
-						if (mListener != null) {
-							mListener.onSourceDeleted(mSourceId, affected > 1 ? affected - 1 : 0);
-						}
+				.setPositiveButton(R.string.lbl_ok, (dialogInterface, which) -> {
+					//TODO: Make Async
+					DbManager dbManager = GrimoriumApp.getInstance().getDbManager();
+					int affected = dbManager.getSourceDbAdapter().delete(mSourceId);
+					if (mListener != null) {
+						mListener.onSourceDeleted(mSourceId, affected > 1 ? affected - 1 : 0);
 					}
 				})
 				.setNegativeButton(R.string.lbl_cancel, null)
@@ -225,12 +226,13 @@ public class SourceDetailFragment extends Fragment
 	}
 
 	private void updateSource() {
+
 		if (mSource == null)
 			return;
 
+		mIsLoading = true;
 		showProgressDialog();
 
-		mIsLoading = true;
 		mSourceManager.startDownload(mSource.getUrl());
 	}
 
@@ -239,14 +241,12 @@ public class SourceDetailFragment extends Fragment
 	private static final String TAG_PROGRESS_DIALOG = "ProgressDialog";
 
 	private void showProgressDialog() {
-		mProgressDialog = (ProgressFragmentDialog) getFragmentManager().findFragmentByTag(TAG_PROGRESS_DIALOG);
+
+		if (! isAdded())
+			return;
+
+		mProgressDialog = (ProgressFragmentDialog) getParentFragmentManager().findFragmentByTag(TAG_PROGRESS_DIALOG);
 		if (mProgressDialog == null) {
-//			mProgressDialog = ProgressDialog.show(
-//					getContext(),
-//					getString(R.string.lbl_source_update),
-//					getString(R.string.lbl_source_loading),
-//					true,
-//					false);
 			mProgressDialog = ProgressFragmentDialog.showMessageDialog(
 					this.getActivity(),
 					R.string.lbl_source_update,
@@ -260,7 +260,11 @@ public class SourceDetailFragment extends Fragment
 	}
 
 	private void hideProgressDialog() {
-		mProgressDialog = (ProgressFragmentDialog) getFragmentManager().findFragmentByTag(TAG_PROGRESS_DIALOG);
+
+		if (! isAdded())
+			return;
+
+		mProgressDialog = (ProgressFragmentDialog) getParentFragmentManager().findFragmentByTag(TAG_PROGRESS_DIALOG);
 		if (mProgressDialog != null) {
 			mProgressDialog.dismiss();
 			mProgressDialog = null;
@@ -280,11 +284,10 @@ public class SourceDetailFragment extends Fragment
 
 	@Override
 	public void onSourceImported(int created, int updated, int skipped, int deleted) {
+		mIsLoading = false;
 		hideProgressDialog();
 
-		mIsLoading = false;
-
-		setSource(mSourceId, true);
+		setSource(mSourceId);
 
 		mListener.onSourceUpdated();
 	}
@@ -296,9 +299,9 @@ public class SourceDetailFragment extends Fragment
 
 	@Override
 	public void onSourceImportFailed(int errorCode) {
+		mIsLoading = false;
 		hideProgressDialog();
 
-		mIsLoading = false;
 		SourceManager.getErrorDialog(getContext(), errorCode).show();
 	}
 

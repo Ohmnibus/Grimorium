@@ -4,7 +4,11 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.webkit.WebSettings;
@@ -15,12 +19,6 @@ import com.danielstone.materialaboutlibrary.util.OpenSourceLicense;
 import net.ohmnibus.grimorium.R;
 import net.ohmnibus.grimorium.aboutbox.AboutConfig;
 import net.ohmnibus.grimorium.aboutbox.activity.AboutActivity;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Utils {
 
@@ -35,36 +33,16 @@ public class Utils {
 		return toolbarHeight;
 	}
 
-	public static List<String> deserializeStringList(String serializedValues, List<String> defaultValues) {
-		List<String> retVal = null;
-
-		if (serializedValues != null) {
-			try {
-				final JSONArray a = new JSONArray(serializedValues);
-				if (a.length() > 0) {
-					retVal = new ArrayList<>(a.length());
-					for (int i = 0; i < a.length(); i++) {
-						final String value = a.optString(i);
-
-						if (value != null) {
-							retVal.add(value);
-						}
-					}
-				}
-			} catch (JSONException e) {
-				Log.e(TAG, "deserializeStringList", e);
-			}
-		}
-
-		return (retVal != null) ? retVal : defaultValues;
-	}
-
-	public static void initWebView(Context context, WebView webView) {
+	public static void initWebView(@Nullable Context context, @NonNull WebView webView) {
 		WebSettings webSettings = webView.getSettings();
 
-		float size = context.getResources().getDimension(R.dimen.detail_text_size);
+		if (context != null) {
+			float size = context.getResources().getDimension(R.dimen.detail_text_size);
+			webSettings.setDefaultFontSize((int) pixelToDp(context, (int)size));
+		} else {
+			Log.w(TAG, "initWebView: Context not available");
+		}
 
-		webSettings.setDefaultFontSize((int) pixelToDp(context, (int)size));
 		//webSettings.setRenderPriority(RenderPriority.HIGH);
 		webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 		//webSettings.setAppCacheEnabled(false);

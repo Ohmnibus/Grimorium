@@ -5,10 +5,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
-import androidx.core.app.NotificationCompat;
 import androidx.loader.content.AsyncTaskLoader;
 import androidx.loader.content.Loader;
 import androidx.core.os.OperationCanceledException;
@@ -23,15 +25,11 @@ import com.google.gson.stream.JsonReader;
 
 import net.ohmnibus.grimorium.R;
 import net.ohmnibus.grimorium.database.BaseDbAdapter;
-import net.ohmnibus.grimorium.database.ProfileDbAdapter;
 import net.ohmnibus.grimorium.database.SourceDbAdapter;
 import net.ohmnibus.grimorium.database.SpellDbAdapter;
 import net.ohmnibus.grimorium.database.SpellProfileDbAdapter;
-import net.ohmnibus.grimorium.entity.Profile;
 import net.ohmnibus.grimorium.entity.Source;
 import net.ohmnibus.grimorium.entity.Spell;
-import net.ohmnibus.grimorium.helper.StaticBitSet;
-import net.ohmnibus.grimorium.legacy.ProfileManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +39,7 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by Ohmnibus on 01/10/2016.
@@ -70,22 +69,20 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 
 	private final Context mContext;
 	private final LoaderManager mLoaderManager;
-	private final OnSourceImportedListener mSourceImportedListener;
-	private final MyHandler mHandler;// = new MyHandler();
+	private final MyHandler mHandler;
 
 	public SourceManager(AppCompatActivity activity, OnSourceImportedListener listener) {
-		this(activity, activity.getSupportLoaderManager(), listener);
+		this(activity, LoaderManager.getInstance(activity), listener);
 	}
 
 	public SourceManager(Fragment fragment, OnSourceImportedListener listener) {
-		this(fragment.getContext(), fragment.getLoaderManager(), listener);
+		this(fragment.getContext(), LoaderManager.getInstance(fragment), listener);
 	}
 
 	private SourceManager(Context context, LoaderManager loaderManager, OnSourceImportedListener listener) {
 		mContext = context;
 		mLoaderManager = loaderManager;
-		mSourceImportedListener = listener;
-		mHandler = new MyHandler(mSourceImportedListener);
+		mHandler = new MyHandler(listener);
 		Loader<ImportResult> loader = mLoaderManager.getLoader(LOADER_SOURCE_MANAGER);
 		if (loader != null) {
 			//An operation is already running.
@@ -110,15 +107,11 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 		mLoaderManager.destroyLoader(LOADER_SOURCE_MANAGER);
 	}
 
-	public AlertDialog getErrorDialog(int errorCode) {
-		return getErrorDialog(mContext, errorCode);
-	}
-
 	public static AlertDialog getErrorDialog(Context context, int errorCode) {
-		String message = context.getString(R.string.lbl_source_error);
+		final String message;
 		switch (errorCode) {
-			case OnSourceImportedListener.ERR_CANNOT_CONNECT:
-				message = context.getString(R.string.lbl_source_error_cannot_connect);
+			case OnSourceImportedListener.ERR_NO_CONNECTION:
+				message = context.getString(R.string.lbl_source_error_no_connection);
 				break;
 			case OnSourceImportedListener.ERR_CANNOT_READ:
 				message = context.getString(R.string.lbl_source_error_cannot_read);
@@ -129,14 +122,18 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 			case OnSourceImportedListener.ERR_FORMAT_NOT_VALID:
 				message = context.getString(R.string.lbl_source_error_format_invalid);
 				break;
-			case OnSourceImportedListener.ERR_NO_CONNECTION:
-				message = context.getString(R.string.lbl_source_error_no_connection);
+			case OnSourceImportedListener.ERR_CANNOT_CONNECT:
+				message = context.getString(R.string.lbl_source_error_cannot_connect);
 				break;
 			case OnSourceImportedListener.ERR_STALE_DATA:
 				message = context.getString(R.string.lbl_source_error_stale_data);
 				break;
 			case OnSourceImportedListener.ERR_INVALID_URL:
 				message = context.getString(R.string.lbl_source_error_invalid_url);
+				break;
+			case OnSourceImportedListener.ERR_GENERIC:
+			default:
+				message = context.getString(R.string.lbl_source_error);
 				break;
 		}
 		AlertDialog.Builder bld = new AlertDialog.Builder(context);
@@ -146,6 +143,7 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 		return bld.create();
 	}
 
+	@NonNull
 	@Override
 	public Loader<ImportResult> onCreateLoader(int id, Bundle args) {
 		String url = null;
@@ -156,7 +154,7 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 	}
 
 	@Override
-	public void onLoadFinished(Loader<ImportResult> loader, ImportResult data) {
+	public void onLoadFinished(@NonNull Loader<ImportResult> loader, ImportResult data) {
 		if (data == null) //Shortcut
 			return;
 
@@ -182,7 +180,7 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 	}
 
 	@Override
-	public void onLoaderReset(Loader<ImportResult> loader) {
+	public void onLoaderReset(@NonNull Loader<ImportResult> loader) {
 		//NOOP
 	}
 
@@ -191,11 +189,13 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 		private final WeakReference<OnSourceImportedListener> mListener;
 
 		public MyHandler(OnSourceImportedListener listener) {
+			super(Looper.myLooper());
 			mListener = new WeakReference<>(listener);
 		}
 
 		@Override
 		public void handleMessage(Message msg) {
+
 			OnSourceImportedListener listener = mListener.get();
 			if (listener == null) //Shortcut
 				return;
@@ -245,10 +245,10 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 	private static class SourceAsyncTaskLoader extends AsyncTaskLoader<ImportResult> {
 
 		private static final int PROGRESS_STEP = 5;
-		private String mRawUrl;
+		private final String mRawUrl;
+		private final Gson mGson;
 		private Handler mHandler;
 		private boolean mResetPending;
-		private Gson mGson;
 		private int mProgressUpdateCount;
 
 		public SourceAsyncTaskLoader(Context context, String url, Handler handler) {
@@ -274,12 +274,6 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 			mResetPending = false;
 			forceLoad();
 		}
-
-//		@Override
-//		protected void onStopLoading() {
-//			super.onStopLoading();
-//			cancelLoad();
-//		}
 
 		@Override
 		protected void onReset() {
@@ -329,8 +323,10 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 			//Check connectivity
 			ConnectivityManager connMgr = (ConnectivityManager)
 					getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+			boolean isConnected;
 			NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-			if (networkInfo == null || !networkInfo.isConnected()) {
+			isConnected = (networkInfo != null && networkInfo.isConnected());
+			if (!isConnected) {
 				//Shortcut
 				retVal = new ImportResult();
 				retVal.status = OnSourceImportedListener.ERR_NO_CONNECTION;
@@ -341,7 +337,6 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 			HttpURLConnection conn = null;
 
 			try {
-				//URL url = new URL(myurl);
 				conn = (HttpURLConnection) url.openConnection();
 				conn.setReadTimeout(10000 /* milliseconds */);
 				conn.setConnectTimeout(15000 /* milliseconds */);
@@ -399,7 +394,7 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 
 			try {
 				source.setUrl(url.toString());
-				InputStreamReader isr = new InputStreamReader(stream, "UTF-8");
+				InputStreamReader isr = new InputStreamReader(stream, StandardCharsets.UTF_8);
 				JsonReader reader = new JsonReader(isr);
 
 				reader.beginObject();
@@ -466,7 +461,7 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 				retVal.status = OnSourceImportedListener.ERR_NONE;
 				Log.e(TAG, "privateImport", e);
 			} catch (Exception e) {
-				retVal.status = OnSourceImportedListener.ERR_CANNOT_READ;
+				retVal.status = OnSourceImportedListener.ERR_GENERIC;
 				Log.e(TAG, "privateImport", e);
 			}
 
@@ -501,34 +496,7 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 				long srcId = source.getId();
 				String srcNs = source.getNameSpace();
 
-				//region Import legacy "star" data
-
 				SpellProfileDbAdapter starDbAdapter = SpellProfileDbAdapter.getInstance();
-				long[] profileIds = new long[0];
-				StaticBitSet[] stars = new StaticBitSet[0];
-
-				if (isNewSource && ProfileManager.isLegacySource(getContext(), source)) {
-					ProfileDbAdapter profileDbAdapter = ProfileDbAdapter.getInstance();
-
-					Profile[] profiles = ProfileManager.getLegacyProfiles(getContext());
-					profileIds = new long[profiles.length];
-					stars = new StaticBitSet[profiles.length];
-
-					for (int i = 0; i < profiles.length; i++) {
-						Profile profile = profileDbAdapter.get(profiles[i].getKey());
-
-						if (profile == null) {
-							//Legacy profile was deleted
-							profileIds[i] = -1;
-							stars[i] = new StaticBitSet();
-						} else {
-							profileIds[i] = profile.getId();
-							stars[i] = ProfileManager.getLegacyStars(getContext(), profile);
-						}
-					}
-				}
-
-				//endregion
 
 				int spellIndex = 0;
 				long spellId;
@@ -544,12 +512,6 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 					Spell spell = mGson.fromJson(reader, Spell.class);
 					spell.setSourceId(srcId);
 					spell.initBitfields();
-					//long spellId = spellDbAdapter.insert(spell, true);
-					//long spellId = spellDbAdapter.set(spell, true);
-//					if (spellId <= 0) {
-//						Log.w(TAG, "privateImport: Cannot save spell " + spellIndex + ": " + spell.getName());
-//						continue;
-//					}
 					int setStatus = spellDbAdapter.set(spell, true);
 					if (setStatus == SpellDbAdapter.SET_CREATED) {
 						isNewSpell = true;
@@ -572,16 +534,6 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 						//Resync star data, if exist
 						starDbAdapter.syncStar(spellUid, srcNs, spellId, true);
 					}
-
-					//region Import legacy "star" data
-					for (int i = 0; i < profileIds.length; i++) {
-						long profileId = profileIds[i];
-						if (profileId > 0 && stars[i].get(spellUid)) {
-							//starDbAdapter.setStar(profileId, spellId, true, true);
-							starDbAdapter.setStar(profileId, spellId, true, true);
-						}
-					}
-					//endregion
 
 					spellIndex++;
 				}
@@ -624,6 +576,8 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 		int ERR_STALE_DATA = 6;
 		/** The URI provided is not valid */
 		int ERR_INVALID_URL = 7;
+		/** Generic error */
+		int ERR_GENERIC = 8;
 
 		/**
 		 * Called when a source has been imported.
