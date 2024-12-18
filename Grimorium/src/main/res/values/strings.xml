@@ -1,27 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
 	<string name="app_name">Grimorium Free</string>
-	<!--<string name="app_copy">© 2017 Ohmnibus</string>-->
 	<string name="app_author" translatable="false">Ohmnibus</string>
+	<string name="app_publisher" translatable="false" />
 	<string name="app_facebook" translatable="false">OhmnibusProductions</string>
 	<string name="app_twitter" translatable="false">\@Ohmnibus</string>
-	<string name="app_website" translatable="false" /><!-- TODO -->
+	<string name="app_website" translatable="false">https://github.com/Ohmnibus/Grimorium</string>
+	<string name="app_changelog" translatable="false">https://github.com/Ohmnibus/Grimorium/releases</string>
 	<string name="app_email" translatable="false">ohmnibus@gmail.com</string>
 	<string name="app_email_subject" translatable="false">[Grimorium]</string>
-	<string name="app_share">Try %1$s!\nhttp://play.google.com/store/apps/details?id=%2$s</string>
+	<string name="app_share">Try %1$s!\nhttps://github.com/Ohmnibus/Grimorium</string>
 	<string name="company_website" translatable="false">http://www.ohmnibus.net/en/</string>
 	<string name="app_privacy" translatable="false" />
 	<string name="app_acknowledgment" translatable="false" />
 
-	<!--<string name="about_version">Version</string>-->
-	<!--<string name="about_changelog">Changelog</string>-->
-	<!--<string name="about_review">Review</string>-->
-	<!--<string name="about_share">Share</string>-->
-	<!--<string name="about_share_message">Share</string>-->
-	<!--<string name="about_contact">Contact support</string>-->
 	<string name="about_title">About %s</string>
-
-	<string name="lblMainTitle">Grimorium - %s</string>
 
 	<string name="lbl_type_m">M</string>
 	<string name="lbl_type_c">C</string>

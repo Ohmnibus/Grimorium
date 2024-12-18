@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class AboutConfig {
 
-    public enum BuildType {AMAZON, GOOGLE}
+    public enum BuildType {AMAZON, GOOGLE, FREE}
 
     //    general info
     public String appName;
@@ -17,6 +17,7 @@ public class AboutConfig {
     public String facebookUserName;
     public String twitterUserName;
     public String webHomePage;
+    public String changelogHtmlPath;
     public String guideHtmlPath;
     public String appPublisher;
     public String companyHtmlPath;
@@ -40,7 +41,7 @@ public class AboutConfig {
     public String sharingTitle;
 
     // License
-    public ArrayList<License> licenses = new ArrayList<License>();
+    public ArrayList<License> licenses = new ArrayList<>();
 
     public void addLicense(String library, String year, String author, OpenSourceLicense type) {
         License license = new License();
@@ -51,7 +52,7 @@ public class AboutConfig {
         licenses.add(license);
     }
 
-    public static class SingletonHolder {
+    private static class SingletonHolder {
         public static final AboutConfig HOLDER_INSTANCE = new AboutConfig();
     }
 
@@ -65,4 +66,6 @@ public class AboutConfig {
         public String mAuthor;
         public OpenSourceLicense mType;
     }
+
+    private AboutConfig() { }
 }

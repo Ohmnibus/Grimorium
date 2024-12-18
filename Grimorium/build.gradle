@@ -12,13 +12,16 @@ android {
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
 
-        versionNameSuffix " free"
         buildConfigField 'boolean', 'ADS_ON_LIST', 'false'
         buildConfigField 'boolean', 'ADS_ON_DETAILS', 'false'
     }
 
     buildTypes {
+        debug {
+            versionNameSuffix " free"
+        }
         release {
+            applicationIdSuffix ".adnd"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

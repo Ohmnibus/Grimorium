@@ -48,6 +48,7 @@ public final class EmailUtil {
         switch (buildType) {
             case GOOGLE:    return "Google Play";
             case AMAZON:    return "Amazon Kindle";
+            case FREE:      return "GitHub";
             default:        return "Unknown";
         }
     }

@@ -139,18 +139,19 @@ public class Utils {
 		}
 		aboutConfig.aboutLabelTitle = activity.getString(R.string.about_title, activity.getString(R.string.app_author));
 		aboutConfig.packageName = activity.getApplicationContext().getPackageName();
-		aboutConfig.buildType = true /* google */ ? AboutConfig.BuildType.GOOGLE : AboutConfig.BuildType.AMAZON;
+		//This must be set
+		aboutConfig.buildType = AboutConfig.BuildType.FREE;
+		aboutConfig.changelogHtmlPath = activity.getString(R.string.app_changelog);
 
 		aboutConfig.facebookUserName = activity.getString(R.string.app_facebook);
 		aboutConfig.twitterUserName = activity.getString(R.string.app_twitter);
 		aboutConfig.webHomePage = activity.getString(R.string.app_website);
 
 		// app publisher for "Try Other Apps" item
-		aboutConfig.appPublisher = activity.getString(R.string.app_author);
+		aboutConfig.appPublisher = activity.getString(R.string.app_publisher);
 
 		aboutConfig.shareMessage = activity.getString(R.string.app_share,
-				activity.getString(R.string.app_name),
-				aboutConfig.packageName);
+				activity.getString(R.string.app_name));
 		aboutConfig.sharingTitle = activity.getString(R.string.app_name);
 		// if pages are stored locally, then you need to override aboutConfig.dialog to be able use custom WebView
 		aboutConfig.companyHtmlPath = activity.getString(R.string.company_website);
