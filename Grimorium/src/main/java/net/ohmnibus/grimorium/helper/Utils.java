@@ -35,28 +35,6 @@ public class Utils {
 		return toolbarHeight;
 	}
 
-//	public static int getTabsHeight(Context context) {
-//		return (int) context.getResources().getDimension(R.dimen.tabsHeight);
-//	}
-
-	public static String serializeStringList(List<String> values) {
-		String retVal = null;
-		try {
-			final JSONArray a = new JSONArray();
-
-			for (int i = 0; i < values.size(); i++) {
-				a.put(values.get(i));
-			}
-
-			if (!values.isEmpty()) {
-				retVal = a.toString();
-			}
-		} catch (RuntimeException e) {
-			Log.e(TAG, "serializeStringList()", e);
-		}
-		return retVal;
-	}
-
 	public static List<String> deserializeStringList(String serializedValues, List<String> defaultValues) {
 		List<String> retVal = null;
 
@@ -64,19 +42,17 @@ public class Utils {
 			try {
 				final JSONArray a = new JSONArray(serializedValues);
 				if (a.length() > 0) {
-					//values = new HashSet<String>();
 					retVal = new ArrayList<>(a.length());
-				}
-				for (int i = 0; i < a.length(); i++) {
-					final String value = a.optString(i);
+					for (int i = 0; i < a.length(); i++) {
+						final String value = a.optString(i);
 
-					if (value != null) {
-						retVal.add(value);
+						if (value != null) {
+							retVal.add(value);
+						}
 					}
 				}
 			} catch (JSONException e) {
 				Log.e(TAG, "deserializeStringList", e);
-				retVal = null;
 			}
 		}
 
@@ -103,8 +79,7 @@ public class Utils {
 
 	public static float pixelToDp(Context context, int pixel){
 		float densityDpi = context.getResources().getDisplayMetrics().densityDpi;
-		float dp = pixel / (densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-		return dp;
+		return pixel / (densityDpi / DisplayMetrics.DENSITY_DEFAULT);
 	}
 
 	public static String join(long[] array, String separator) {
@@ -114,15 +89,13 @@ public class Utils {
 	public static String join(long[] array, String separator, int radix) {
 		if (array == null)
 			return null;
-//		if (array.length == 0)
-//			return "";
-		String retVal = "";
+		final StringBuilder retVal = new StringBuilder();
 		String sep = "";
 		for (long item : array) {
-			retVal += sep + Long.toString(item, radix);
+			retVal.append(sep).append(Long.toString(item, radix));
 			sep = separator;
 		}
-		return retVal;
+		return retVal.toString();
 	}
 
 	public static void showAboutBox(AppCompatActivity activity) {

@@ -153,7 +153,7 @@
 	<string name="lbl_source_remove_title">Remove Spell Library</string>
 	<string name="lbl_source_remove_message">Are you sure to erase the entire Spell Library called \"%s\"?\nThis cannot be undone.</string>
 	<string name="lbl_source_no_data">No spell libraries available.\nTouch here to discover some new spell libraries.</string>
-	<string name="lbl_source_load_canceled">Ok, nevermind.</string>
+	<string name="lbl_source_load_canceled">OK, nevermind.</string>
 
 	<string name="lbl_spell_level_cantrip">Cantrip</string>
 	<string name="lbl_spell_level_orison">Orison</string>

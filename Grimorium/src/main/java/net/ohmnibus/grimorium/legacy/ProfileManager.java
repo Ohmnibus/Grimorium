@@ -28,25 +28,15 @@ public class ProfileManager {
 	public static String PROFILE_PREF_NAME = "Profiles";
 
 	private static final String KEY_PROFILES_ID_LIST = "KEY_PROFILES_ID_LIST";
-	private static final String KEY_PROFILES_IMPORTED_ID_LIST = "KEY_PROFILES_IMPORTED_ID_LIST";
-
-	public static final String PROFILE_ID_DEFAULT = "DefaultProfile";
 
 	public static @NonNull Profile[] getLegacyProfiles(Context context) {
-//		return getLegacyProfiles(context, PROFILE_PREF_NAME);
-//	}
-//
-//	public static Profile[] getLegacyProfiles(Context context, String prefName) {
-//		SharedPreferences mPreferences = context
-//				.getApplicationContext()
-//				.getSharedPreferences(prefName, Context.MODE_PRIVATE);
 		SharedPreferences mPreferences = context
 				.getApplicationContext()
 				.getSharedPreferences(PROFILE_PREF_NAME, Context.MODE_PRIVATE);
 
 		List<String> mIdProfiles = Utils.deserializeStringList(
 				mPreferences.getString(KEY_PROFILES_ID_LIST, null),
-				new ArrayList<String>()
+				new ArrayList<>()
 		);
 		ArrayList<Profile> mProfiles = new ArrayList<>();
 		for (String profileId : mIdProfiles) {
@@ -56,7 +46,7 @@ public class ProfileManager {
 				mProfiles.add(p);
 		}
 
-		return mProfiles.toArray(new Profile[mProfiles.size()]);
+		return mProfiles.toArray(new Profile[0]);
 	}
 
 	private static final String[] LEGACY_SOURCES = new String[] {
@@ -64,7 +54,7 @@ public class ProfileManager {
 			"official.priests.all"
 	};
 
-	public static boolean isLegacySource(Context context, Source source) {
+	public static boolean isLegacySource(@SuppressWarnings("unused") Context context, Source source) {
 		boolean isLegacySource = false;
 
 		for (String src : LEGACY_SOURCES) {
@@ -109,10 +99,11 @@ public class ProfileManager {
 	private static final String FIELD_FILTER = "filter";
 
 	private static Profile deserializeProfile(String profile) {
+
 		if (TextUtils.isEmpty(profile))
 			return null;
 
-		Profile retVal = null;
+		Profile retVal;
 
 		try {
 			final JSONObject obj = new JSONObject(profile);
@@ -130,6 +121,7 @@ public class ProfileManager {
 	}
 
 	private static SpellFilter deserializeFilter(String filter) {
+
 		if (TextUtils.isEmpty(filter))
 			return null;
 
@@ -146,23 +138,16 @@ public class ProfileManager {
 		if (fields.length > 7) {
 			retVal.setStarredOnly(Integer.parseInt(fields[7], 16) == 1); //1 = SPELL_STARRED_ONLY
 		}
-//		//Read this at last to recycle "fields" array
-//		retVal.starred.clear();
-//		if (fields.length > 6 && fields[6].length() > 0) {
-//			fields = fields[6].split(",");
-//			for (String field : fields) {
-//				retVal.starred.set(Integer.parseInt(field, 16));
-//			}
-//		}
 
 		return retVal;
 	}
 
 	private static StaticBitSet deserializeStarred(String profile) {
+
 		if (TextUtils.isEmpty(profile))
 			return null;
 
-		StaticBitSet retVal = null;
+		StaticBitSet retVal;
 
 		try {
 			final JSONObject obj = new JSONObject(profile);
