@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import androidx.annotation.NonNull;
+
 /**
  * Created by Ohmnibus on 18/05/2017.
  */
@@ -41,8 +43,9 @@ public class SourceCache implements Iterable<SourceCache.SourceHeader> {
 		}
 	}
 
-	private ArrayList<SourceHeader> mCache = new ArrayList<>();
+	private final ArrayList<SourceHeader> mCache = new ArrayList<>();
 
+	@SuppressWarnings("unused")
 	public void refresh() {
 		Cursor cursor = GrimoriumApp.getInstance().getDbManager().getSourceDbAdapter().getCursor();
 		refresh(cursor);
@@ -73,6 +76,7 @@ public class SourceCache implements Iterable<SourceCache.SourceHeader> {
 		return mCache.get(index);
 	}
 
+	@NonNull
 	@Override
 	public Iterator<SourceHeader> iterator() {
 		return new SourceHeaderIterator();

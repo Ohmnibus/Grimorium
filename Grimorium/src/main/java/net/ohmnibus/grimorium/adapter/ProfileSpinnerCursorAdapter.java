@@ -3,6 +3,8 @@ package net.ohmnibus.grimorium.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,7 +42,7 @@ public class ProfileSpinnerCursorAdapter extends SimpleCursorAdapter
 	private final ProfileDbAdapter mDbAdapter;
 	private int mLayout;
 	private int mDropDownLayout;
-	private OnDataReadyListener mDataReadyListener;
+	private final OnDataReadyListener mDataReadyListener;
 
 	public ProfileSpinnerCursorAdapter(AppCompatActivity activity, int layout, int dropDownLayout, OnDataReadyListener dataReadyListener) {
 		super(
@@ -113,10 +115,6 @@ public class ProfileSpinnerCursorAdapter extends SimpleCursorAdapter
 		return mDbAdapter.get(getItemId(position));
 	}
 
-	public Profile getItem(String key) {
-		return mDbAdapter.get(key);
-	}
-
 	@Override
 	public int getCount() {
 		return super.getCount() + 1;
@@ -147,7 +145,7 @@ public class ProfileSpinnerCursorAdapter extends SimpleCursorAdapter
 		return position == super.getCount();
 	}
 
-	private View getAddView(int position, View convertView, ViewGroup parent, int layout) {
+	private View getAddView(@SuppressWarnings("unused") int position, View convertView, ViewGroup parent, int layout) {
 		View retVal;
 
 		if (convertView == null) {
@@ -157,7 +155,7 @@ public class ProfileSpinnerCursorAdapter extends SimpleCursorAdapter
 		}
 
 		//Bind
-		TextView text = (TextView)retVal.findViewById(android.R.id.text1);
+		TextView text = retVal.findViewById(android.R.id.text1);
 		text.setText(R.string.lbl_profile_spinner_add);
 
 		return retVal;
@@ -190,25 +188,26 @@ public class ProfileSpinnerCursorAdapter extends SimpleCursorAdapter
 
 	private void initLoader() {
 		Log.d(TAG, "Initializing...");
-		mActivity.getSupportLoaderManager().initLoader(LOADER_PROFILE_SPINNER, null, this);
+		LoaderManager.getInstance(mActivity).initLoader(LOADER_PROFILE_SPINNER, null, this);
 	}
 
 	private void restartLoader() {
-		mActivity.getSupportLoaderManager().restartLoader(LOADER_PROFILE_SPINNER, null, this);
+		LoaderManager.getInstance(mActivity).restartLoader(LOADER_PROFILE_SPINNER, null, this);
 	}
 
+	@NonNull
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		return new ProfileCursorLoader(mActivity);
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+	public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
 		changeCursor(data);
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
+	public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 		//NOOP
 	}
 

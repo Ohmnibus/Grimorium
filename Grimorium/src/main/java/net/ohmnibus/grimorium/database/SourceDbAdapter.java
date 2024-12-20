@@ -28,7 +28,7 @@ public class SourceDbAdapter extends BaseDbAdapter {
 	}
 
 	public Cursor getCursor() {
-		Cursor c = getDb().query(
+		return getDb().query(
 				SourceTable.TABLE_NAME,
 				null,
 				null,
@@ -37,7 +37,6 @@ public class SourceDbAdapter extends BaseDbAdapter {
 				null,
 				SORT_DEFAULT
 		);
-		return c;
 	}
 
 	public Source get(long id) {
@@ -69,6 +68,7 @@ public class SourceDbAdapter extends BaseDbAdapter {
 	 * @param source Reference Source
 	 * @return The Source ID, or -1 if an error occurred during creation.
 	 */
+	@SuppressWarnings("unused")
 	public long getSourceId(Source source) {
 		long retVal;
 
@@ -132,7 +132,7 @@ public class SourceDbAdapter extends BaseDbAdapter {
 	public long insert(Source source, boolean inTransaction) {
 		long retVal;
 
-		//if (! inTransaction) getDb().beginTransaction();
+		if (! inTransaction) getDb().beginTransaction();
 
 		try {
 			retVal = getDb().insert(
@@ -140,13 +140,13 @@ public class SourceDbAdapter extends BaseDbAdapter {
 					null,
 					getContentValues(source));
 
-			//if (! inTransaction) getDb().setTransactionSuccessful();
+			if (! inTransaction) getDb().setTransactionSuccessful();
 		} catch (Exception ex) {
 			Log.e(TAG, "insert", ex);
 			retVal = -1;
 			handleQueryException(ex);
-		//} finally {
-			//if (! inTransaction) getDb().endTransaction();
+		} finally {
+			if (! inTransaction) getDb().endTransaction();
 		}
 
 		return retVal;
@@ -205,37 +205,12 @@ public class SourceDbAdapter extends BaseDbAdapter {
 			retVal = retVal + affected;
 
 			//Remove spells belonging to source
-			//TODO: move this inside SpellDbAdapter?
-			affected = getDb().delete(
-					GrimoriumContract.SpellTable.TABLE_NAME,
-					GrimoriumContract.SpellTable.COLUMN_NAME_SOURCE + " = ?",
-					new String[] { Long.toString(sourceId) }
-			);
+			SpellDbAdapter.getInstance().deleteBySource(sourceId, true);
 			Log.i(TAG, "Deleted " + affected + " spell(s) in source(s)");
 			retVal = retVal + affected;
 
-//			//Remove stars belonging to spells
-//			affected = getDb().delete(
-//					GrimoriumContract.StarTable.TABLE_NAME,
-//					GrimoriumContract.StarTable.COLUMN_NAME_SPELL_ID + " Not In (" +
-//					"Select " + GrimoriumContract.SpellTable._ID + " " +
-//					"From " + GrimoriumContract.SpellTable.TABLE_NAME + " " +
-//					") ",
-//					null
-//			);
-//			Log.i(TAG, "Deleted " + affected + " stars(s) in spell(s)");
-
 			//Remove useless star records
-			//TODO: move this inside SpellProfileDbAdapter?
-			affected = getDb().delete(
-					GrimoriumContract.StarTable.TABLE_NAME,
-					GrimoriumContract.StarTable.COLUMN_NAME_SPELL_ID + " Not In (" +
-					"Select " + GrimoriumContract.SpellTable._ID + " " +
-					"From " + GrimoriumContract.SpellTable.TABLE_NAME + " " +
-					") " +
-					"And " + GrimoriumContract.StarTable.COLUMN_NAME_STARRED + " = ?",
-					new String[] { "0" }
-			);
+			affected = SpellProfileDbAdapter.getInstance().deleteUnused(true);
 			Log.i(TAG, "Deleted " + affected + " useless stars(s) in spell(s)");
 
 			if (! inTransaction) getDb().setTransactionSuccessful();

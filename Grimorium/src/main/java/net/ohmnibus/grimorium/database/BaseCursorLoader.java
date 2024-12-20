@@ -84,8 +84,7 @@ public abstract class BaseCursorLoader extends AsyncTaskLoader<Cursor> {
 	/**
 	 * Starts an asynchronous load of the contacts list data. When the result is ready the callbacks
 	 * will be called on the UI thread. If a previous load has been completed and is still valid
-	 * the result may be passed to the callbacks immediately.
-	 *
+	 * the result may be passed to the callbacks immediately.<br />
 	 * Must be called from the UI thread
 	 */
 	@Override
@@ -123,18 +122,4 @@ public abstract class BaseCursorLoader extends AsyncTaskLoader<Cursor> {
 		}
 		mCursor = null;
 	}
-
-//	@Override
-//	public void dump(String prefix, FileDescriptor fd, PrintWriter writer, String[] args) {
-//		super.dump(prefix, fd, writer, args);
-//		writer.print(prefix); writer.print("mUri="); writer.println(mUri);
-//		writer.print(prefix); writer.print("mProjection=");
-//		writer.println(Arrays.toString(mProjection));
-//		writer.print(prefix); writer.print("mSelection="); writer.println(mSelection);
-//		writer.print(prefix); writer.print("mSelectionArgs=");
-//		writer.println(Arrays.toString(mSelectionArgs));
-//		writer.print(prefix); writer.print("mSortOrder="); writer.println(mSortOrder);
-//		writer.print(prefix); writer.print("mCursor="); writer.println(mCursor);
-//		writer.print(prefix); writer.print("mContentChanged="); writer.println(mContentChanged);
-//	}
 }

@@ -325,6 +325,7 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 					getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 			boolean isConnected;
 			NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+			//noinspection deprecation
 			isConnected = (networkInfo != null && networkInfo.isConnected());
 			if (!isConnected) {
 				//Shortcut
@@ -472,8 +473,8 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 			boolean isNewSource;
 
 			try {
-				SourceDbAdapter srcDbAdapter = SourceDbAdapter.getInstance();
-				SpellDbAdapter spellDbAdapter = SpellDbAdapter.getInstance();
+				final SourceDbAdapter srcDbAdapter = SourceDbAdapter.getInstance();
+				final SpellDbAdapter spellDbAdapter = SpellDbAdapter.getInstance();
 				Source testSource = srcDbAdapter.getByNamespace(source.getNameSpace());
 
 				BaseDbAdapter.beginTransaction();
@@ -493,10 +494,10 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 					source.setId(srcDbAdapter.insert(source, true));
 				}
 
-				long srcId = source.getId();
-				String srcNs = source.getNameSpace();
+				final long srcId = source.getId();
+				final String srcNs = source.getNameSpace();
 
-				SpellProfileDbAdapter starDbAdapter = SpellProfileDbAdapter.getInstance();
+				final SpellProfileDbAdapter starDbAdapter = SpellProfileDbAdapter.getInstance();
 
 				int spellIndex = 0;
 				long spellId;

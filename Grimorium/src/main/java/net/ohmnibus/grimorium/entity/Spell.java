@@ -3,6 +3,7 @@ package net.ohmnibus.grimorium.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.gson.annotations.Expose;
@@ -21,7 +22,6 @@ public class Spell implements Parcelable, Comparable<Spell> {
 	@Retention(RetentionPolicy.SOURCE)
 	public @interface SpellType{}
 
-	private static final int BITFIELD_UNDEFINED = 0xffffffff;
 	private static final int BITFIELD_ALL = 0x0fffffff;
 	private static final int BITFIELD_NONE = 0x00000000;
 
@@ -31,16 +31,6 @@ public class Spell implements Parcelable, Comparable<Spell> {
 
 	public static final int LEVEL_ALL = BITFIELD_ALL;
 	public static final int LEVEL_CANTRIP = 0;
-//	public static final int LEVEL_01 = 1;
-//	public static final int LEVEL_02 = 2;
-//	public static final int LEVEL_03 = 3;
-//	public static final int LEVEL_04 = 4;
-//	public static final int LEVEL_05 = 5;
-//	public static final int LEVEL_06 = 6;
-//	public static final int LEVEL_07 = 7;
-//	public static final int LEVEL_08 = 8;
-//	public static final int LEVEL_09 = 9;
-//	public static final int LEVEL_10 = 10;
 	public static final int LEVEL_QUEST = 11;
 	
 	public static final int SCHOOL_NONE = BITFIELD_NONE;
@@ -509,28 +499,31 @@ public class Spell implements Parcelable, Comparable<Spell> {
 		return resIdList[0];
 	}
 
+	@SuppressWarnings("unused")
 	public int[] getSchoolsResIdList() {
-		return getSchoolsResIdList(mSchools); //getResIdList(mSchools, SCHOOL);
+		return getSchoolsResIdList(mSchools);
 	}
 
+	@SuppressWarnings("unused")
 	public int[] getSpheresResIdList() {
-		return getSpheresResIdList(mSpheres); //getResIdList(mSpheres, SPHERE);
+		return getSpheresResIdList(mSpheres);
 	}
 
+	@SuppressWarnings("unused")
 	public int[] getComposResIdList() {
-		return getComposResIdList(mCompos); //getResIdList(mCompos, COMP);
+		return getComposResIdList(mCompos);
 	}
 
-	public static int[] getSchoolsResIdList(int schools) {
-		return getResIdList(schools, SCHOOL);
+	public static int[] getSchoolsResIdList(int schoolsBitField) {
+		return getResIdList(schoolsBitField, SCHOOL);
 	}
 
-	public static int[] getSpheresResIdList(int spheres) {
-		return getResIdList(spheres, SPHERE);
+	public static int[] getSpheresResIdList(int spheresBitField) {
+		return getResIdList(spheresBitField, SPHERE);
 	}
 
-	public static int[] getComposResIdList(int compos) {
-		return getResIdList(compos, COMP);
+	public static int[] getComposResIdList(int composBitField) {
+		return getResIdList(composBitField, COMP);
 	}
 
 	private static int[] getResIdList(int bitField, Object[][] map) {
@@ -581,7 +574,7 @@ public class Spell implements Parcelable, Comparable<Spell> {
 				}
 			}
 		}
-		return retVal.toArray(new String[retVal.size()]);
+		return retVal.toArray(new String[0]);
 	}
 
 	public static String[] getSchoolsLabels(int schools) {
@@ -592,7 +585,8 @@ public class Spell implements Parcelable, Comparable<Spell> {
 		return getLabelList(spheres, SPHERE);
 	}
 
-		@Override
+	@NonNull
+	@Override
 	public String toString() {
 		String t = (mType & Spell.TYPE_WIZARDS) != 0 ? "M" : "C";
 		return mName + " (" + t + ", " + mLevel + ")";
@@ -648,9 +642,6 @@ public class Spell implements Parcelable, Comparable<Spell> {
 
 		for (Object[] couple : map) {
 			int code = (Integer)couple[IDX_CODE];
-//			if (code == BITFIELD_ALL || (bitField & code) != 0) {
-//				retVal.add((String)couple[IDX_LABEL]);
-//			}
 			if (code == BITFIELD_ALL) {
 				//Ignore the "ALL" label
 				continue;
@@ -660,7 +651,7 @@ public class Spell implements Parcelable, Comparable<Spell> {
 			}
 		}
 
-		return retVal.toArray(new String[retVal.size()]);
+		return retVal.toArray(new String[0]);
 	}
 
 	private static int getCode(String rawLabel, Object[][] map, int defValue) {

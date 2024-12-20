@@ -77,10 +77,12 @@ public class SpellFilter implements Parcelable {
 		this.books = books;
 	}
 
+	@SuppressWarnings("unused")
 	public void setBook(int book, boolean value) {
 		this.books = setBits(this.books, book, value);
 	}
 
+	@SuppressWarnings("unused")
 	public boolean isBook(int book) {
 		return isBits(this.books, book, Spell.BOOK_NONE);
 	}
@@ -106,6 +108,7 @@ public class SpellFilter implements Parcelable {
 		this.levels = setBits(this.levels, levelBit, value);
 	}
 
+	@SuppressWarnings("unused")
 	public boolean isLevel(int level) {
 		int levelBit = 0x01 << level;
 		return (this.levels & levelBit) != 0;
@@ -127,10 +130,12 @@ public class SpellFilter implements Parcelable {
 		this.schools = schools;
 	}
 
+	@SuppressWarnings("unused")
 	public void setSchool(int school, boolean value) {
 		this.schools = setBits(this.schools, school, value);
 	}
 
+	@SuppressWarnings("unused")
 	public boolean isSchool(int school) {
 		return isBits(this.schools, school, Spell.SCHOOL_NONE);
 	}
@@ -151,10 +156,12 @@ public class SpellFilter implements Parcelable {
 		this.spheres = spheres;
 	}
 
+	@SuppressWarnings("unused")
 	public void setSphere(int sphere, boolean value) {
 		this.spheres = setBits(this.spheres, sphere, value);
 	}
 
+	@SuppressWarnings("unused")
 	public boolean isSphere(int sphere) {
 		return isBits(this.spheres, sphere, Spell.SPHERE_NONE);
 	}
@@ -241,13 +248,13 @@ public class SpellFilter implements Parcelable {
 	}
 
 	private String mergeLabels(Set<String> labels) {
-		String labelList = "";
+		final StringBuilder labelList = new StringBuilder();
 		String sep = "";
 		for (String label : labels) {
-			labelList = labelList + sep + label;
+			labelList.append(sep).append(label);
 			sep = ",";
 		}
-		return labelList;
+		return labelList.toString();
 	}
 
 	//region Parcelable methods
@@ -292,50 +299,4 @@ public class SpellFilter implements Parcelable {
 
 	//endregion
 
-	//region Serialization
-
-	@Deprecated
-	public String serialize() {
-		return serialize(this);
-	}
-
-	@Deprecated
-	public static String serialize(SpellFilter filter) {
-		if (filter == null)
-			return null;
-
-		StringBuilder retVal = new StringBuilder();
-
-		retVal.append(Integer.toHexString(filter.types));
-		retVal.append("|").append(Integer.toHexString(filter.levels));
-		retVal.append("|").append(Integer.toHexString(filter.books));
-		retVal.append("|").append(Integer.toHexString(filter.schools));
-		retVal.append("|").append(Integer.toHexString(filter.spheres));
-		retVal.append("|").append(Integer.toHexString(filter.components));
-		retVal.append("|").append(Integer.toHexString(filter.starredOnly));
-
-		return retVal.toString();
-	}
-
-	@Deprecated
-	public static SpellFilter deserialize(String filter) {
-		if (filter == null)
-			return null;
-
-		String[] fields = filter.split("\\|");
-
-		SpellFilter retVal = new SpellFilter();
-
-		retVal.types = Integer.parseInt(fields[0], 16);
-		retVal.levels = Integer.parseInt(fields[1], 16);
-		retVal.books = Integer.parseInt(fields[2], 16);
-		retVal.schools = Integer.parseInt(fields[3], 16);
-		retVal.spheres = Integer.parseInt(fields[4], 16);
-		retVal.components = Integer.parseInt(fields[5], 16);
-		retVal.starredOnly = Integer.parseInt(fields[6], 16);
-
-		return retVal;
-	}
-
-	//endregion
 }

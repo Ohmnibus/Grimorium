@@ -2,22 +2,11 @@ package net.ohmnibus.grimorium.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-
-import net.ohmnibus.grimorium.helper.StaticBitSet;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Arrays;
 
 /**
  * Created by Ohmnibus on 28/08/2016.
  */
 public class Profile implements Parcelable {
-
-	private static final String TAG = "Profile";
 
 	public static final String PROFILE_KEY_DEFAULT = "DefaultProfile";
 
@@ -102,7 +91,6 @@ public class Profile implements Parcelable {
 		parcel.writeString(mName);
 		parcel.writeInt(mSys ? 1 : 0);
 		parcel.writeParcelable(mFilter, i);
-		//parcel.writeIntArray(starred.toArray());
 	}
 
 	protected Profile(Parcel in) {
@@ -111,7 +99,6 @@ public class Profile implements Parcelable {
 		mName = in.readString();
 		mSys = in.readInt() != 0;
 		mFilter = in.readParcelable(SpellFilter.class.getClassLoader());
-		//starred.set(in.createIntArray());
 	}
 
 	public static final Parcelable.Creator<Profile> CREATOR = new Parcelable.Creator<Profile>() {
@@ -126,73 +113,4 @@ public class Profile implements Parcelable {
 
 	//endregion
 
-	//region Serialization
-
-	@Deprecated
-	public String serialize() {
-		return serialize(this);
-	}
-
-	private static final String FIELD_ID = "id";
-	private static final String FIELD_KEY = "key";
-	private static final String FIELD_NAME = "name";
-	private static final String FIELD_SYS = "sys";
-	private static final String FIELD_FILTER = "filter";
-	@Deprecated
-	private static final String FIELD_STARRED = "starred";
-
-	@Deprecated
-	public static String serialize(Profile profile) {
-		if (profile == null)
-			return null;
-
-		String retVal = null;
-
-		final JSONObject obj = new JSONObject();
-		try {
-			obj.put(FIELD_ID, profile.mId);
-			obj.put(FIELD_KEY, profile.mKey);
-			obj.put(FIELD_NAME, profile.mName);
-			obj.put(FIELD_SYS, profile.mSys);
-			obj.put(FIELD_FILTER, profile.mFilter.serialize());
-			//obj.put(FIELD_STARRED, new JSONArray(Arrays.asList(profile.starred.toArray())));
-
-			retVal = obj.toString();
-		} catch (JSONException e) {
-			Log.e(TAG, "serialize()", e);
-			retVal = null;
-		}
-
-		return retVal;
-	}
-
-	@Deprecated
-	public static Profile deserialize(String profile) {
-		if (profile == null)
-			return null;
-
-		Profile retVal = null;
-
-		try {
-			final JSONObject obj = new JSONObject(profile);
-			retVal = new Profile();
-			retVal.mId = obj.getLong(FIELD_ID);
-			retVal.mKey = obj.getString(FIELD_KEY);
-			retVal.mName = obj.getString(FIELD_NAME);
-			retVal.mSys = obj.getBoolean(FIELD_SYS);
-			retVal.mFilter = SpellFilter.deserialize(obj.getString(FIELD_FILTER));
-			JSONArray stars = obj.getJSONArray(FIELD_STARRED);
-//			retVal.starred.clear();
-//			for (int i = 0; i < stars.length(); i++) {
-//				retVal.starred.set(stars.getInt(i));
-//			}
-		} catch (JSONException e) {
-			Log.e(TAG, "deserialize()", e);
-			retVal = null;
-		}
-
-		return retVal;
-	}
-
-	//endregion
 }

@@ -5,6 +5,8 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,12 +35,13 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
 	public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
 
-	private Drawable mDivider;
+	private final Drawable mDivider;
 	private int mOrientation;
 
 	/**
 	 * Default divider will be used, vertical orientation
 	 */
+	@SuppressWarnings("unused")
 	public DividerItemDecoration(Context context) {
 		this(context, VERTICAL_LIST);
 	}
@@ -47,6 +50,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 	 * Default divider will be used
 	 */
 	public DividerItemDecoration(Context context, int orientation) {
+		//noinspection resource
 		final TypedArray styledAttributes = context.obtainStyledAttributes(ATTRS);
 		mDivider = styledAttributes.getDrawable(0);
 		styledAttributes.recycle();
@@ -56,6 +60,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 	/**
 	 * Custom divider will be used
 	 */
+	@SuppressWarnings("unused")
 	public DividerItemDecoration(Context context, int orientation, int resId) {
 		mDivider = ContextCompat.getDrawable(context, resId);
 		setOrientation(orientation);
@@ -69,12 +74,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 	}
 
 	@Override
-	public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-//		super.onDraw(c, parent, state);
-//	}
-//
-//	@Override
-//	public void onDraw(Canvas c, RecyclerView parent) {
+	public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
 		if (mOrientation == VERTICAL_LIST) {
 			drawVertical(c, parent);
 		} else {
@@ -115,7 +115,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 	}
 
 	@Override
-	public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+	public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
 		super.getItemOffsets(outRect, view, parent, state);
 
 		if (parent.getChildAdapterPosition(view) == 0) {

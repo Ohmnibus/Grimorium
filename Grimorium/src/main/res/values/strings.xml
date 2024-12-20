@@ -6,7 +6,7 @@
 	<string name="app_facebook" translatable="false">OhmnibusProductions</string>
 	<string name="app_twitter" translatable="false">\@Ohmnibus</string>
 	<string name="app_website" translatable="false">https://github.com/Ohmnibus/Grimorium</string>
-	<string name="app_changelog" translatable="false">https://github.com/Ohmnibus/Grimorium/releases</string>
+	<string name="app_changelog" translatable="false">https://github.com/Ohmnibus/Grimorium/blob/main/CHANGELOG.md</string>
 	<string name="app_email" translatable="false">ohmnibus@gmail.com</string>
 	<string name="app_email_subject" translatable="false">[Grimorium]</string>
 	<string name="app_share">Try %1$s!\nhttps://github.com/Ohmnibus/Grimorium</string>
@@ -155,6 +155,9 @@
 	<string name="lbl_source_no_data">No spell libraries available.\nTouch here to discover some new spell libraries.</string>
 	<string name="lbl_source_load_canceled" tools:ignore="Typos">Ok, nevermind.</string>
 
+	<string name="lbl_spell_reversible_star">*</string>
+	<string name="lbl_spell_reversible_no_star" />
+	<string name="lbl_spell_name_and_star">%1$s%2$s</string>
 	<string name="lbl_spell_level_cantrip">Cantrip</string>
 	<string name="lbl_spell_level_orison">Orison</string>
 	<string name="lbl_spell_level_spell">%s level spell</string>

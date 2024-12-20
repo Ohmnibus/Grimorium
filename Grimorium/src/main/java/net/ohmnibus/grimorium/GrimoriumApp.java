@@ -87,7 +87,6 @@ public class GrimoriumApp extends Application
 					Log.i(TAG, "getDbManager: Waiting for initialization.");
 					mSyncToken.wait();
 				} catch (InterruptedException e) {
-					//e.printStackTrace();
 					FirebaseCrashWrapper.log("Exception waiting for DBManager to initialize.");
 					FirebaseCrashWrapper.report(e);
 				}
@@ -120,7 +119,7 @@ public class GrimoriumApp extends Application
 		}
 	}
 
-	private SourceCache mSourceCache = new SourceCache();
+	private final SourceCache mSourceCache = new SourceCache();
 
 	public void refreshSourceCache() {
 		Cursor c = mDbManager.getSourceDbAdapter().getCursor();
@@ -133,7 +132,6 @@ public class GrimoriumApp extends Application
 	}
 
 	public int getSourceCount() {
-		//return mSourceCount;
 		return mSourceCache.size();
 	}
 

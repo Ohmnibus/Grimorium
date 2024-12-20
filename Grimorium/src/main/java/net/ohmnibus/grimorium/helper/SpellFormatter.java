@@ -1,19 +1,21 @@
 package net.ohmnibus.grimorium.helper;
 
 import android.content.Context;
-import android.hardware.camera2.params.StreamConfigurationMap;
 
 import net.ohmnibus.grimorium.R;
 import net.ohmnibus.grimorium.entity.Spell;
+
+import androidx.annotation.NonNull;
 
 /**
  * Created by Ohmnibus on 27/09/2016.
  */
 
+@SuppressWarnings("unused")
 public class SpellFormatter {
 
-	Context mContext;
-	Spell mSpell;
+	private final Context mContext;
+	private Spell mSpell;
 
 	public SpellFormatter(Context context, Spell spell) {
 		mContext = context;
@@ -134,19 +136,6 @@ public class SpellFormatter {
 	}
 
 	public static int getTypeLevel(Context ctx, Spell spell) {
-//		int retVal;
-//		switch (spell.getType()) {
-//			case Spell.TYPE_WIZARDS:
-//				retVal = 1;
-//				break;
-//			case Spell.TYPE_CLERICS:
-//				retVal = 2;
-//				break;
-//			default:
-//				retVal = 0;
-//				break;
-//		}
-//		return retVal;
 		return getTypeLevel(ctx, spell.getType());
 	}
 
@@ -176,8 +165,7 @@ public class SpellFormatter {
 		} else if (level == Spell.LEVEL_CANTRIP) {
 			return "C";
 		}
-		return Integer.toString(level) + "°";
-		//return ctx.getResources().getQuantityString(R.plurals.lbl_level, spell.getLevel(), spell.getLevel());
+		return level + "°";
 	}
 
 	public static String getLevelLong(Context ctx, Spell spell) {
@@ -211,40 +199,19 @@ public class SpellFormatter {
 	}
 
 	public static String getSchool(Context ctx, Spell spell, boolean format) {
-//		int[] resIdList;
-//		String retVal;
-//		String sep;
-//
-//		resIdList = spell.getSchoolsResIdList();
-//		retVal = "";
-//		sep = "";
-//		for(int resId : resIdList) {
-//			retVal += sep + ctx.getString(resId);
-//			sep = ", ";
-//		}
-//		if (format && retVal.length() > 0) {
-//			retVal = ctx.getString(R.string.lbl_spell_school, retVal);
-//		}
-//		return retVal;
 		return getSchool(ctx, spell.getSchools(), format);
 	}
 
-	public static String getSchool(Context ctx, int schools, boolean format) {
-		int[] resIdList;
-		String retVal;
-		String sep;
+	public static String getSchool(Context ctx, int schoolsBitField, boolean format) {
 
-		//resIdList = spell.getSchoolsResIdList();
-		resIdList = Spell.getSchoolsResIdList(schools);
-		retVal = "";
-		sep = "";
-		for(int resId : resIdList) {
-			retVal += sep + ctx.getString(resId);
-			sep = ", ";
-		}
+		int[] resIdList = Spell.getSchoolsResIdList(schoolsBitField);
+
+		String retVal = joinRes(ctx, resIdList, ", ");
+
 		if (format && retVal.length() > 0) {
 			retVal = ctx.getString(R.string.lbl_spell_school, retVal);
 		}
+
 		return retVal;
 	}
 
@@ -252,51 +219,22 @@ public class SpellFormatter {
 		return getSphere(ctx, spell.getSpheres());
 	}
 
-	public static String getSphere(Context ctx, int spheres) {
-		int[] resIdList;
-		String retVal;
-		String sep;
+	public static String getSphere(Context ctx, int spheresBitField) {
 
-		//resIdList = spell.getSpheresResIdList();
-		resIdList = Spell.getSpheresResIdList(spheres);
-		retVal = "";
-		sep = "";
-		for(int resId : resIdList) {
-			retVal += sep + ctx.getString(resId);
-			sep = ", ";
-		}
-		return retVal;
+		int[] resIdList = Spell.getSpheresResIdList(spheresBitField);
+
+		return joinRes(ctx, resIdList, ", ");
 	}
 
 	public static String getCompos(Context ctx, Spell spell) {
-//		int[] resIdList;
-//		String compos;
-//		String sep;
-//
-//		resIdList = spell.getComposResIdList();
-//		compos = "";
-//		sep = "";
-//		for(int resId : resIdList) {
-//			compos += sep + ctx.getString(resId);
-//			sep = ", ";
-//		}
-//		return compos;
 		return getCompos(ctx, spell.getCompos());
 	}
 
-	public static String getCompos(Context ctx, int compos) {
-		int[] resIdList;
-		String retVal;
-		String sep;
+	public static String getCompos(Context ctx, int composBitField) {
 
-		resIdList = Spell.getComposResIdList(compos);
-		retVal = "";
-		sep = "";
-		for(int resId : resIdList) {
-			retVal += sep + ctx.getString(resId);
-			sep = ", ";
-		}
-		return retVal;
+		int[] resIdList = Spell.getComposResIdList(composBitField);
+
+		return joinRes(ctx, resIdList, ", ");
 	}
 
 	public static String getReversible(Context ctx, Spell spell) {
@@ -304,22 +242,6 @@ public class SpellFormatter {
 	}
 
 	public static String getDescription(Context ctx, Spell spell) {
-//		String[] resStringList;
-//		switch (spell.getType()) {
-//			case Spell.TYPE_WIZARDS:
-//				resStringList = ctx.getResources().getStringArray(R.array.mages_spell_body_ref);
-//				break;
-//			case Spell.TYPE_CLERICS:
-//				resStringList = ctx.getResources().getStringArray(R.array.clerics_spell_body_ref);
-//				break;
-//			default:
-//				resStringList = null;
-//				break;
-//		}
-//		if (resStringList == null || spell.getDescResId() < 0 || spell.getDescResId() >= resStringList.length) {
-//			return "[Not found]";
-//		}
-//		return formatBody(resStringList[spell.getDescResId()]);
 		return formatBody(spell.getDesc());
 	}
 
@@ -364,6 +286,29 @@ public class SpellFormatter {
 			retVal = ctx.getString(R.string.lbl_spell_author, spell.getAuthor());
 		}
 		return retVal;
+	}
+
+	@NonNull
+	private static String joinRes(@NonNull Context ctx, @NonNull int[] resIdList, @NonNull String separator) {
+
+		if (resIdList.length == 0)
+			return "";
+
+		if (resIdList.length == 1)
+			return ctx.getString(resIdList[0]);
+
+		if (resIdList.length == 2)
+			return ctx.getString(resIdList[0])
+					+ separator
+					+ ctx.getString(resIdList[1]);
+
+		StringBuilder retVal = new StringBuilder();
+		String sep = "";
+		for(int resId : resIdList) {
+			retVal.append(sep).append(ctx.getString(resId));
+			sep = separator;
+		}
+		return retVal.toString();
 	}
 
 	//endregion

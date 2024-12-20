@@ -16,8 +16,8 @@ import net.ohmnibus.grimorium.fragment.SpellListFragment;
 import net.ohmnibus.grimorium.helper.Utils;
 import net.ohmnibus.grimorium.helper.iab.BillingClientHelper;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -66,8 +66,6 @@ public class SpellListActivity extends AppCompatActivity
 	private GrimoriumApp mApp;
 	private boolean mIsTwoPane;
 	private Toolbar mToolbar;
-	private ActionBar mActionBar;
-	private FloatingActionButton mFab;
 	private SpellListFragment mSpellListFragment;
 	private Profile mProfile;
 	private Spinner mProfileSpinner = null;
@@ -113,13 +111,13 @@ public class SpellListActivity extends AppCompatActivity
 
 		initToolbar();
 
-		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		DrawerLayout drawer = findViewById(R.id.drawer_layout);
 		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
 				this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 		drawer.addDrawerListener(toggle);
 		toggle.syncState();
 
-		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+		NavigationView navigationView = findViewById(R.id.nav_view);
 		navigationView.setNavigationItemSelectedListener(this);
 
 		//Initialization other than toolbar
@@ -137,8 +135,8 @@ public class SpellListActivity extends AppCompatActivity
 
 		initTitle(); //-> onDataReady -> setTitle
 
-		mFab = findViewById(R.id.fab);
-		mFab.setOnClickListener(this);
+		FloatingActionButton fab = findViewById(R.id.fab);
+		fab.setOnClickListener(this);
 
 		initSpellList();
 	}
@@ -148,11 +146,11 @@ public class SpellListActivity extends AppCompatActivity
 	private void initToolbar() {
 		mToolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(mToolbar);
-		mActionBar = getSupportActionBar();
-		if (mActionBar != null) {
-			mActionBar.setDisplayShowTitleEnabled(false); //Hide title in order to show spinner
-			mActionBar.setDisplayShowHomeEnabled(true);
-			mActionBar.setIcon(R.drawable.ic_launcher);
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setDisplayShowTitleEnabled(false); //Hide title in order to show spinner
+			actionBar.setDisplayShowHomeEnabled(true);
+			actionBar.setIcon(R.drawable.ic_launcher);
 		}
 	}
 
@@ -199,7 +197,6 @@ public class SpellListActivity extends AppCompatActivity
 		inflater.inflate(R.menu.menu_main, menu);
 
 		final MenuItem item = menu.findItem(R.id.mnuMainSearch);
-		//final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
 		final SearchView searchView = (SearchView) item.getActionView();
 		searchView.setOnQueryTextListener(this);
 
@@ -303,7 +300,6 @@ public class SpellListActivity extends AppCompatActivity
 	public void onProfileHeaderChanged(long profileId, String key) {
 		if (profileId == mProfile.getId()) {
 			mProfile = mApp.getDbManager().getProfileDbAdapter().get(profileId);
-			//initTitle();
 			setTitle(mProfile);
 		}
 	}
@@ -425,11 +421,8 @@ public class SpellListActivity extends AppCompatActivity
 		Fragment fragment = spellFragmentCache[spellFragmentCacheNum];
 
 		getSupportFragmentManager().beginTransaction()
-				//.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-				//.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
 				.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
 				.replace(R.id.fragment_container, fragment)
-				//.addToBackStack(null)
 				.commit();
 	}
 
@@ -470,7 +463,7 @@ public class SpellListActivity extends AppCompatActivity
 			Log.d(TAG, "Adding profile " + text);
 			//Add new profile
 			Profile profile = new Profile(text);
-			final long id = mApp.getDbManager().getProfileDbAdapter().insert(profile);
+			mApp.getDbManager().getProfileDbAdapter().insert(profile);
 			//Switch to profile
 			selectProfile(profile, false);
 			//Refresh spinner & update title (on callback)
@@ -506,6 +499,7 @@ public class SpellListActivity extends AppCompatActivity
 
 	//endregion
 
+	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public void onDataReady() {
 		//The data in the spinner is ready
@@ -515,15 +509,12 @@ public class SpellListActivity extends AppCompatActivity
 			mProfileSpinner.setAdapter(mProfileSpinnerAdapter);
 			mProfileSpinner.setOnItemSelectedListener(this);
 			mProfileSpinnerListenerEnabled = false;
-			mProfileSpinner.setOnTouchListener(new View.OnTouchListener() {
-				@Override
-				public boolean onTouch(View view, MotionEvent motionEvent) {
-					if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-						//Handle spinner events only on user action
-						mProfileSpinnerListenerEnabled = true;
-					}
-					return false;
+			mProfileSpinner.setOnTouchListener((view, motionEvent) -> {
+				if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+					//Handle spinner events only on user action
+					mProfileSpinnerListenerEnabled = true;
 				}
+				return false;
 			});
 		}
 		Log.d(TAG, "Data ready, updating title");
@@ -535,19 +526,15 @@ public class SpellListActivity extends AppCompatActivity
 	@Override
 	public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-		switch (item.getItemId()) {
-			case R.id.mnuDrawerProfiles:
-				pickProfile();
-				break;
-			case R.id.mnuDrawerSources:
-				manageSources();
-				break;
-			case R.id.mnuDrawerIab:
-				buyDisableAds();
-				break;
-			case R.id.mnuDrawerAbout:
-				Utils.showAboutBox(this);
-				break;
+		long itemId = item.getItemId();
+		if (itemId == R.id.mnuDrawerProfiles) {
+			pickProfile();
+		} else if (itemId == R.id.mnuDrawerSources) {
+			manageSources();
+		} else if (itemId == R.id.mnuDrawerIab) {
+			buyDisableAds();
+		} else if (itemId == R.id.mnuDrawerAbout) {
+			Utils.showAboutBox(this);
 		}
 
 		DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -659,7 +646,7 @@ public class SpellListActivity extends AppCompatActivity
 	}
 
 	private void enableIabMenu(boolean enabled) {
-		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+		NavigationView navigationView = findViewById(R.id.nav_view);
 		Menu menu = navigationView.getMenu();
 		MenuItem item = menu.findItem(R.id.mnuDrawerPurchase);
 		item.setEnabled(enabled);
@@ -670,7 +657,7 @@ public class SpellListActivity extends AppCompatActivity
 	}
 
 	private void showIabMenu(boolean shown) {
-		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+		NavigationView navigationView = findViewById(R.id.nav_view);
 		Menu menu = navigationView.getMenu();
 		menu.findItem(R.id.mnuDrawerPurchase).setVisible(shown);
 	}

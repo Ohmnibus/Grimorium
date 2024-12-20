@@ -1,6 +1,5 @@
 package net.ohmnibus.grimorium.entity.ads;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;

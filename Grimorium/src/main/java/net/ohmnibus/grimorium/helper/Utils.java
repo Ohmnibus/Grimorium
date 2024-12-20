@@ -60,11 +60,13 @@ public class Utils {
 		return pixel / (densityDpi / DisplayMetrics.DENSITY_DEFAULT);
 	}
 
-	public static String join(long[] array, String separator) {
+	@Nullable
+	public static String join(@Nullable long[] array, @NonNull String separator) {
 		return join(array, separator, 10);
 	}
 
-	public static String join(long[] array, String separator, int radix) {
+	@Nullable
+	public static String join(@Nullable long[] array, @NonNull String separator, int radix) {
 		if (array == null)
 			return null;
 		final StringBuilder retVal = new StringBuilder();

@@ -13,6 +13,7 @@ public class Source {
 	String mName;
 	@SerializedName("nameSpace")
 	String mNameSpace;
+	@SuppressWarnings("unused")
 	@SerializedName("format")
 	int mFormat;
 	@SerializedName("version")

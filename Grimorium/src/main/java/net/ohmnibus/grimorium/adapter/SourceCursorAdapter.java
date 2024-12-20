@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -60,8 +62,9 @@ public class SourceCursorAdapter extends CursorRecyclerViewAdapter<SourceCursorA
 		initLoader();
 	}
 
+	@NonNull
 	@Override
-	public SourceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	public SourceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		SourceViewHolder retVal;
 
 		if (viewType == TYPE_SOURCE) {
@@ -76,7 +79,8 @@ public class SourceCursorAdapter extends CursorRecyclerViewAdapter<SourceCursorA
 	}
 
 	@Override
-	public void onBindViewHolder(SourceViewHolder viewHolder, int position) {
+	public void onBindViewHolder(@NonNull SourceViewHolder viewHolder, int position) {
+		//noinspection StatementWithEmptyBody
 		if (isAddItem(position)) {
 			//NOOP
 		} else {
@@ -88,10 +92,6 @@ public class SourceCursorAdapter extends CursorRecyclerViewAdapter<SourceCursorA
 	public void onBindViewHolder(SourceViewHolder viewHolder, int position, Cursor cursor) {
 		Source item = mDbAdapter.get(cursor);
 		viewHolder.bindAllViews(item, position);
-	}
-
-	public Source getItem(int position) {
-		return mDbAdapter.get(getItemId(position));
 	}
 
 	@Override
@@ -128,13 +128,14 @@ public class SourceCursorAdapter extends CursorRecyclerViewAdapter<SourceCursorA
 	//region Loaders
 
 	private void initLoader() {
-		mFragment.getLoaderManager().initLoader(LOADER_SOURCE_LIST, null, this);
+		LoaderManager.getInstance(mFragment).initLoader(LOADER_SOURCE_LIST, null, this);
 	}
 
 	private void restartLoader() {
-		mFragment.getLoaderManager().restartLoader(LOADER_SOURCE_LIST, null, this);
+		LoaderManager.getInstance(mFragment).restartLoader(LOADER_SOURCE_LIST, null, this);
 	}
 
+	@NonNull
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		return new SourceCursorLoader(mFragment.getContext());
@@ -143,22 +144,19 @@ public class SourceCursorAdapter extends CursorRecyclerViewAdapter<SourceCursorA
 	Handler mHandler = new Handler();
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+	public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
 
 		changeCursor(data);
 
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				if (mOnItemEventListener != null) {
-					mOnItemEventListener.onDataReady(SourceCursorAdapter.this);
-				}
+		mHandler.post(() -> {
+			if (mOnItemEventListener != null) {
+				mOnItemEventListener.onDataReady(SourceCursorAdapter.this);
 			}
 		});
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
+	public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 		//NOOP
 	}
 
@@ -209,7 +207,7 @@ public class SourceCursorAdapter extends CursorRecyclerViewAdapter<SourceCursorA
 		protected void findAllViews(View baseView) {
 			mRoot = baseView;
 			mRoot.setOnClickListener(this);
-			mName = (TextView) baseView.findViewById(R.id.name);
+			mName = baseView.findViewById(R.id.name);
 		}
 
 		protected void bindAllViews(Source item, int position) {
@@ -238,8 +236,6 @@ public class SourceCursorAdapter extends CursorRecyclerViewAdapter<SourceCursorA
 
 		protected void findAllViews(View baseView) {
 			mRoot = baseView;
-			//mAdd = (ImageButton)baseView.findViewById(R.id.add);
-			//mAdd.setOnClickListener(this);
 			mRoot.setOnClickListener(this);
 		}
 

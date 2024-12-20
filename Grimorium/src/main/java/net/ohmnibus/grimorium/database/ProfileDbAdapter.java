@@ -19,11 +19,10 @@ public class ProfileDbAdapter extends BaseDbAdapter {
 
 	private static final String TAG = "ProfileDbAdapter";
 
-	//public static final String PROFILE_ID_DEFAULT = "DefaultProfile";
 	private static final String PROFILE_ID_FMT = "PRF_%s";
 
-	private static final String WHERE_AND = "AND ";
-	private static final String WHERE_OR = "OR ";
+	//private static final String WHERE_AND = "AND ";
+	//private static final String WHERE_OR = "OR ";
 	private static final String SORT_DEFAULT =
 			ProfileTable.COLUMN_NAME_NAME + " Asc ";
 
@@ -38,7 +37,7 @@ public class ProfileDbAdapter extends BaseDbAdapter {
 	}
 
 	public Cursor getCursor() {
-		Cursor c = getDb().query(
+		return getDb().query(
 				ProfileTable.TABLE_NAME,
 				null,
 				null,
@@ -47,7 +46,6 @@ public class ProfileDbAdapter extends BaseDbAdapter {
 				null,
 				SORT_DEFAULT
 		);
-		return c;
 	}
 
 	public Profile get(long id) {
@@ -173,10 +171,6 @@ public class ProfileDbAdapter extends BaseDbAdapter {
 		return updateHeader(profile.getId(), profile, inTransaction);
 	}
 
-	public int updateHeader(long profileId, Profile profile) {
-		return updateHeader(profileId, profile, false);
-	}
-
 	public int updateHeader(long profileId, Profile profile, boolean inTransaction) {
 
 		String whereClause = ProfileTable._ID + " = ?";
@@ -281,7 +275,7 @@ public class ProfileDbAdapter extends BaseDbAdapter {
 	 * @param profile Profile to convert to {@link ContentValues}
 	 * @return {@link ContentValues} collection defining the profile.
 	 */
-	public static ContentValues getProfileCV(Context context, Profile profile) {
+	public static ContentValues getProfileCV(@SuppressWarnings("unused") Context context, Profile profile) {
 		return getContentValues(profile);
 	}
 
@@ -308,7 +302,7 @@ public class ProfileDbAdapter extends BaseDbAdapter {
 	private long innerInsert(Profile profile, boolean inTransaction) {
 		long retVal;
 
-//		if (! inTransaction) getDb().beginTransaction();
+		if (! inTransaction) getDb().beginTransaction();
 
 		try {
 			ContentValues values = getContentValues(profile);
@@ -320,13 +314,13 @@ public class ProfileDbAdapter extends BaseDbAdapter {
 
 			profile.setId(retVal);
 
-//			if (! inTransaction) getDb().setTransactionSuccessful();
+			if (! inTransaction) getDb().setTransactionSuccessful();
 		} catch (Exception ex) {
 			Log.e(TAG, "innerInsert", ex);
 			retVal = -1;
 			handleQueryException(ex);
-//		} finally {
-//			if (! inTransaction) getDb().endTransaction();
+		} finally {
+			if (! inTransaction) getDb().endTransaction();
 		}
 
 		return retVal;
@@ -349,7 +343,7 @@ public class ProfileDbAdapter extends BaseDbAdapter {
 	protected int update(ContentValues values, String whereClause, String[] whereArgs, boolean inTransaction) {
 		int retVal;
 
-//		if (! inTransaction) getDb().beginTransaction();
+		if (! inTransaction) getDb().beginTransaction();
 
 		try {
 			retVal = getDb().update(
@@ -358,13 +352,13 @@ public class ProfileDbAdapter extends BaseDbAdapter {
 					whereClause,
 					whereArgs);
 
-//			if (! inTransaction) getDb().setTransactionSuccessful();
+			if (! inTransaction) getDb().setTransactionSuccessful();
 		} catch (Exception ex) {
 			Log.e(TAG, "update", ex);
 			retVal = -1;
 			handleQueryException(ex);
-//		} finally {
-//			if (! inTransaction) getDb().endTransaction();
+		} finally {
+			if (! inTransaction) getDb().endTransaction();
 		}
 
 		return retVal;

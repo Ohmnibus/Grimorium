@@ -14,6 +14,8 @@ import net.ohmnibus.grimorium.entity.SpellFilter;
 import net.ohmnibus.grimorium.entity.SpellProfile;
 import net.ohmnibus.grimorium.helper.Utils;
 
+import java.util.Locale;
+
 /**
  * Created by Ohmnibus on 16/09/2016.
  */
@@ -45,55 +47,6 @@ public class SpellProfileDbAdapter extends SpellDbAdapter {
 		super();
 	}
 
-	@Deprecated
-	public Cursor getCursor(long profileId) {
-		return getCursor(profileId, null);
-	}
-
-	@Deprecated
-	public Cursor getCursor(long profileId, CharSequence nameFilter) {
-		String whereClause = "";
-		String whereSep = "";
-		//List<String> whereArgs = new ArrayList<>();
-		String[] whereArgs = null;
-
-		Profile profile = ProfileDbAdapter.getInstance().get(profileId);
-		SpellFilter spellFilter = profile == null ? null : profile.getSpellFilter();
-
-		if (! TextUtils.isEmpty(nameFilter)) {
-			whereClause += whereSep + SpellTable.COLUMN_NAME_NAME + " LIKE ? ";
-			whereSep = WHERE_SEP;
-			//whereArgs.add(nameFilter);
-			whereArgs = new String[] { "%" + nameFilter.toString() + "%" };
-		}
-
-		String spellFilterWhereClause = getSelectionBySpellFilter(profileId);
-		if (spellFilterWhereClause.length() > 0) {
-			whereClause += whereSep + spellFilterWhereClause;
-			whereSep = WHERE_SEP;
-		}
-
-		String sql =
-				"Select Spell.*, " +
-						"Coalesce(Star." + StarTable.COLUMN_NAME_STARRED + ", 0) As " + StarTable.COLUMN_NAME_STARRED + ", " +
-						"? As " + StarTable.COLUMN_NAME_PROFILE_ID + " " +
-						"From " + SpellTable.TABLE_NAME + " As Spell " +
-						"Left Join " + StarTable.TABLE_NAME + " As Star " +
-						"On Spell." + SpellTable._ID + " = Star." + StarTable.COLUMN_NAME_SPELL_ID + " " +
-						"And Star." + StarTable.COLUMN_NAME_PROFILE_ID + " = ? ";
-
-		Cursor c = query(
-				profileId,
-				whereClause,
-				whereArgs,
-				null,
-				null,
-				SORT_DEFAULT
-		);
-
-		return c;
-	}
-
 	public Cursor getCursor(String[] columns, long profileId, CharSequence nameFilter) {
 		String whereClause = "";
 		String whereSep = "";
@@ -102,7 +55,7 @@ public class SpellProfileDbAdapter extends SpellDbAdapter {
 		if (! TextUtils.isEmpty(nameFilter)) {
 			whereClause += whereSep + SpellTable.COLUMN_NAME_NAME + " LIKE ? ";
 			whereSep = WHERE_SEP;
-			whereArgs = new String[] { "%" + nameFilter.toString() + "%" };
+			whereArgs = new String[] { "%" + nameFilter + "%" };
 		}
 
 		String spellFilterWhereClause = getSelectionBySpellFilter(profileId);
@@ -244,6 +197,21 @@ public class SpellProfileDbAdapter extends SpellDbAdapter {
 		return whereClause;
 	}
 
+	private String getCompoTest(String field, int component) {
+		return String.format(Locale.US, "((%1$s & %2$d) = 0) ",
+				field, component);
+	}
+
+	private String getBitTest(String field, long filterValue) {
+		return String.format(Locale.US, "((%1$s & %2$d) <> 0) ",
+				field, filterValue);
+	}
+
+	private String getBitTest(String field, long filterValue, long defaultValue) {
+		return String.format(Locale.US, "(%1$s = %3$d Or (%1$s & %2$d) <> 0) ",
+				field, filterValue, defaultValue);
+	}
+
 	public SpellProfile get(long profileId, long spellId) {
 		SpellProfile retVal;
 
@@ -278,53 +246,7 @@ public class SpellProfileDbAdapter extends SpellDbAdapter {
 		retVal.setProfileId(getLong(c, StarTable.COLUMN_NAME_PROFILE_ID));
 		retVal.setStarred(getBoolean(c, StarTable.COLUMN_NAME_STARRED));
 
-		//SpellDbAdapter adapter = new SpellDbAdapter();
-
-		//adapter.fill(retVal, c);
 		super.fill(retVal, c);
-
-		return retVal;
-	}
-
-	public long insert(SpellProfile spellProfile) {
-		return insert(spellProfile, false);
-	}
-
-	public long insert(SpellProfile spellProfile, boolean inTransaction) {
-		long retVal;
-		Spell duplicate = null;
-
-		if (spellProfile.getId() > 0) {
-			duplicate = super.get(spellProfile.getId());
-		}
-		if (duplicate == null) {
-			duplicate = super.get(spellProfile.getSourceId(), spellProfile.getUid());
-		}
-
-		if (! inTransaction) getDb().beginTransaction();
-
-		try {
-			if (duplicate != null) {
-				super.update(spellProfile.getId(), spellProfile, true);
-			} else {
-				super.insert(spellProfile, true);
-			}
-
-			//ContentValues values = getContentValues(spellProfile);
-
-			//retVal = getDb().insert(StarTable.TABLE_NAME, null, values);
-
-			retVal = insertStar(
-					spellProfile.getProfileId(),
-					spellProfile.getId(),
-					spellProfile.isStarred());
-		} catch (Exception ex) {
-			Log.e(TAG, "insert", ex);
-			retVal = -1;
-			handleQueryException(ex);
-		} finally {
-			if (! inTransaction) getDb().endTransaction();
-		}
 
 		return retVal;
 	}
@@ -353,15 +275,7 @@ public class SpellProfileDbAdapter extends SpellDbAdapter {
 				//Record does not exists.
 				//Create record.
 
-//				SpellProfile spellProfile = new SpellProfile();
-//				spellProfile.setProfileId(profileId);
-//				spellProfile.setId(spellId);
-//				spellProfile.setStarred(isStarred);
-//				values = getContentValues(spellProfile);
-//
-//				retVal = getDb().insert(StarTable.TABLE_NAME, null, values);
-
-				retVal = insertStar(profileId, spellId, isStarred);
+				retVal = insertStar(profileId, spellId, isStarred, inTransaction);
 			}
 
 			if (! inTransaction) getDb().setTransactionSuccessful();
@@ -376,40 +290,45 @@ public class SpellProfileDbAdapter extends SpellDbAdapter {
 		return retVal;
 	}
 
-//	public int deleteProfile(long profileId, boolean inTransaction) {
-//		int retVal;
-//
-//		if (! inTransaction) getDb().beginTransaction();
-//
-//		try {
-//			String whereClause;
-//
-//			String[] whereArgs;
-//
-//			whereClause = StarTable.COLUMN_NAME_PROFILE_ID + " = ?";
-//
-//			whereArgs = new String[] { Long.toString(profileId) };
-//
-//			retVal = getDb().delete(
-//					StarTable.TABLE_NAME,
-//					whereClause,
-//					whereArgs);
-//
-//			if (! inTransaction) getDb().setTransactionSuccessful();
-//		} catch (Exception ex) {
-//			Log.e(TAG, "delete", ex);
-//			retVal = -1;
-//			handleQueryException(ex);
-//		} finally {
-//			if (! inTransaction) getDb().endTransaction();
-//		}
-//
-//		return retVal;
-//	}
+	/**
+	 * Remove useless star records.<br />
+	 * Remove unstarred reference to deleted spells.<br />
+	 * @param inTransaction <c>true</c> if inside a previously opened transaction.
+	 * @return Number of record removed.
+	 */
+	public int deleteUnused(boolean inTransaction) {
+
+		int retVal;
+
+		if (! inTransaction) getDb().beginTransaction();
+
+		try {
+
+			retVal = getDb().delete(
+					StarTable.TABLE_NAME,
+					StarTable.COLUMN_NAME_SPELL_ID + " Not In (" +
+							"Select " + SpellTable._ID + " " +
+							"From " + SpellTable.TABLE_NAME + " " +
+							") " +
+							"And " + StarTable.COLUMN_NAME_STARRED + " = ?",
+					new String[] { "0" }
+			);
+
+			if (! inTransaction) getDb().setTransactionSuccessful();
+		} catch (Exception ex) {
+			Log.e(TAG, "deleteBySource", ex);
+			retVal = -1;
+			handleQueryException(ex);
+		} finally {
+			if (! inTransaction) getDb().endTransaction();
+		}
+
+		return retVal;
+	}
 
 	//region Private/protected methods
 
-	private long insertStar(long profileId, long spellId, boolean isStarred) {
+	private long insertStar(long profileId, long spellId, boolean isStarred, boolean inTransaction) {
 		long retVal;
 
 		String sql = "Insert Into " + StarTable.TABLE_NAME + " (" +
@@ -429,25 +348,48 @@ public class SpellProfileDbAdapter extends SpellDbAdapter {
 				" = " + SourceTable.TABLE_NAME + "." + SourceTable._ID + " " +
 				"Where " + SpellTable.TABLE_NAME + "." + SpellTable._ID + " = " + spellId + " ";
 
-		synchronized (TAG) {
-			getDb().execSQL(sql);
+		if (! inTransaction) getDb().beginTransaction();
 
-			sql = "Select last_insert_rowid()";
+		try {
+			synchronized (TAG) {
 
-			Cursor c = getDb().rawQuery(sql, null);
+				getDb().execSQL(sql);
 
-			if (c.moveToFirst()) {
-				retVal = c.getLong(0);
-			} else {
-				retVal = -1;
+				sql = "Select last_insert_rowid()";
+
+				Cursor c = getDb().rawQuery(sql, null);
+
+				if (c.moveToFirst()) {
+					retVal = c.getLong(0);
+				} else {
+					retVal = -1;
+				}
+
+				c.close();
 			}
-
-			c.close();
+			if (! inTransaction) getDb().setTransactionSuccessful();
+		} catch (Exception ex) {
+			Log.e(TAG, "insertStar", ex);
+			retVal = -1;
+			handleQueryException(ex);
+		} finally {
+			if (!inTransaction) getDb().endTransaction();
 		}
 
 		return retVal;
 	}
 
+	/**
+	 * Synchronized star data of re-imported library.<br />
+	 * Once a library is removed, all star data are kept. If said library is imported again,
+	 * pre-existing star data are stnchronized with the new import, provided that the library
+	 * namespace and the spell uid aren't changed.
+	 * @param spellUid Spell uid, defined inside the library.
+	 * @param sourceNameSpace Library namespace.
+	 * @param spellId Newly imported spell Id.
+	 * @param inTransaction <c>true</c> if inside a previously opened transaction.
+	 * @return Number of stars synchronized.
+	 */
 	public int syncStar(int spellUid, String sourceNameSpace, long spellId, boolean inTransaction) {
 		int retVal;
 
@@ -490,58 +432,6 @@ public class SpellProfileDbAdapter extends SpellDbAdapter {
 		return retVal;
 	}
 
-//	public int purgeDuplicate(long sourceId, boolean inTransaction) {
-//		int retVal;
-//
-//		if (! inTransaction) getDb().beginTransaction();
-//
-//		try {
-//
-//			//Delete duplicete stars
-////			Cursor cursor = getDb().query(
-////					GrimoriumContract.StarTable.TABLE_NAME,
-////					new String[] {"Max(" + GrimoriumContract.StarTable._ID + ")"},
-////					whereClause
-////			)
-//			String sql = "Delete From " + StarTable.TABLE_NAME + " " +
-//					"Where " + StarTable._ID + " in (" +
-//					"Select Min(" + StarTable.TABLE_NAME + "." + StarTable._ID + "), " +
-//					SpellTable.TABLE_NAME + "." + SpellTable.COLUMN_NAME_SOURCE + ", " +
-//					SpellTable.TABLE_NAME + "." + SpellTable.COLUMN_NAME_UID + " " +
-//					"From " + StarTable.TABLE_NAME + " " +
-//					"Inner Join " + SpellTable.TABLE_NAME + " " +
-//					"On " + SpellTable.TABLE_NAME + "." + SpellTable._ID + " = " +
-//					StarTable.TABLE_NAME + "." + StarTable.COLUMN_NAME_SPELL_ID + " " +
-//					"Group By " + SpellTable.TABLE_NAME + "." + SpellTable.COLUMN_NAME_SOURCE + ", " +
-//					SpellTable.TABLE_NAME + "." + SpellTable.COLUMN_NAME_UID + " " +
-//					"Having Count(" + StarTable.TABLE_NAME + "." + StarTable._ID + ") > 1 " +
-//					") ";
-//
-//			getDb().rawQuery(sql, null);
-//
-//			if (! inTransaction) getDb().setTransactionSuccessful();
-//		} catch (Exception ex) {
-//			Log.e(TAG, "initSource", ex);
-//			retVal = -1;
-//			handleQueryException(ex);
-//		} finally {
-//			if (! inTransaction) getDb().endTransaction();
-//		}
-//
-//		return retVal;
-//	}
-
-
-//	protected ContentValues getContentValues(SpellProfile spellProfile) {
-//		ContentValues retVal = new ContentValues();
-//
-//		retVal.put(StarTable.COLUMN_NAME_PROFILE_ID, spellProfile.getProfileId());
-//		retVal.put(StarTable.COLUMN_NAME_SPELL_ID, spellProfile.getId());
-//		retVal.put(StarTable.COLUMN_NAME_STARRED, spellProfile.isStarred() ? 1 : 0);
-//
-//		return retVal;
-//	}
-
 	/**
 	 * Perform a query on a join between {@link SpellTable} and {@link StarTable}.
 	 * @param profileId Reference profile.
@@ -571,8 +461,8 @@ public class SpellProfileDbAdapter extends SpellDbAdapter {
 			long profileId,
 			String selection,
 			String[] selectionArgs,
-			String groupBy,
-			String having,
+			@SuppressWarnings("unused") String groupBy,
+			@SuppressWarnings("unused") String having,
 			String orderBy) {
 
 		String sql = QUERY_DEFAULT;
@@ -596,9 +486,6 @@ public class SpellProfileDbAdapter extends SpellDbAdapter {
 		}
 		args[0] = Long.toString(profileId);
 		args[1] = Long.toString(profileId);
-
-		//Log.d(TAG, sql);
-		//Log.d(TAG, TextUtils.join(";", args));
 
 		return getDb().rawQuery(sql, args);
 	}

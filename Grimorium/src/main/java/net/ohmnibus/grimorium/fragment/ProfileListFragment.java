@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
@@ -33,8 +34,6 @@ public class ProfileListFragment extends DialogFragment
 
 	private long mCurrentProfileId;
 	private ProfileListCursorAdapter mAdapter;
-	private RecyclerView mRecyclerView = null;
-
 	private OnFragmentInteractionListener mListener;
 
 	public static ProfileListFragment newInstance(long currentProfileId) {
@@ -55,12 +54,12 @@ public class ProfileListFragment extends DialogFragment
 	}
 
 	@Override
-	public void onAttach(Context context) {
+	public void onAttach(@NonNull Context context) {
 		super.onAttach(context);
 		if (context instanceof OnFragmentInteractionListener) {
 			mListener = (OnFragmentInteractionListener) context;
 		} else {
-			throw new RuntimeException(context.toString()
+			throw new RuntimeException(context
 					+ " must implement OnListFragmentInteractionListener");
 		}
 	}
@@ -81,11 +80,12 @@ public class ProfileListFragment extends DialogFragment
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		//return super.onCreateDialog(savedInstanceState);
-		AlertDialog.Builder bld = new AlertDialog.Builder(getActivity());
+		FragmentActivity activity = requireActivity();
+		AlertDialog.Builder bld = new AlertDialog.Builder(activity);
 		bld.setIcon(R.drawable.ic_launcher);
 		bld.setTitle(R.string.lbl_profiles);
 		bld.setNegativeButton(R.string.lbl_cancel, null);
-		bld.setView(createView(getActivity().getLayoutInflater(), null, null));
+		bld.setView(createView(activity.getLayoutInflater(), null, null));
 		return bld.create();
 	}
 
@@ -98,7 +98,6 @@ public class ProfileListFragment extends DialogFragment
 		} else {
 			view = createView(inflater, container, savedInstanceState);
 		}
-		//View view = inflater.inflate(R.layout.item_profile, container, false);
 		return view;
 	}
 
@@ -108,7 +107,7 @@ public class ProfileListFragment extends DialogFragment
 			mAdapter.setCurrentProfile(mCurrentProfileId);
 		}
 	}
-	protected View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	protected View createView(LayoutInflater inflater, ViewGroup container, @SuppressWarnings("unused") Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_profile_list, container, false);
 
 		//Init the adapter
@@ -118,10 +117,10 @@ public class ProfileListFragment extends DialogFragment
 		mAdapter.setCurrentProfile(mCurrentProfileId);
 
 		Context context = view.getContext();
-		mRecyclerView = view.findViewById(R.id.list);
-		mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-		mRecyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL_LIST));
-		mRecyclerView.setAdapter(mAdapter);
+		RecyclerView recyclerView = view.findViewById(R.id.list);
+		recyclerView.setLayoutManager(new LinearLayoutManager(context));
+		recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL_LIST));
+		recyclerView.setAdapter(mAdapter);
 
 		return view;
 	}
@@ -156,14 +155,9 @@ public class ProfileListFragment extends DialogFragment
 				null
 		);
 		newFragment.setTargetFragment(this, REQUEST_ADD);
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//			//Fix Android O bug
-			if (getFragmentManager() != null) {
-				newFragment.show(getFragmentManager(), "InputTextFragmentDialog");
-			}
-//		} else {
-//			newFragment.show(getChildFragmentManager(), "InputTextFragmentDialog");
-//		}
+		if (isAdded()) {
+			newFragment.show(getParentFragmentManager(), "InputTextFragmentDialog");
+		}
 	}
 
 	private Profile targetProfile;
@@ -177,14 +171,9 @@ public class ProfileListFragment extends DialogFragment
 				targetProfile.getName()
 		);
 		newFragment.setTargetFragment(this, REQUEST_EDIT);
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//			//Fix Android O bug
-			if (getFragmentManager() != null) {
-				newFragment.show(getFragmentManager(), "InputTextFragmentDialog");
-			}
-//		} else {
-//			newFragment.show(getChildFragmentManager(), "InputTextFragmentDialog");
-//		}
+		if (isAdded()) {
+			newFragment.show(getParentFragmentManager(), "InputTextFragmentDialog");
+		}
 	}
 
 	@Override

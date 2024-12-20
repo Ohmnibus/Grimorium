@@ -3,15 +3,12 @@ package net.ohmnibus.grimorium.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
-import android.text.TextUtils;
 import android.util.Log;
 
 import net.ohmnibus.grimorium.entity.Spell;
-import net.ohmnibus.grimorium.entity.SpellFilter;
 import net.ohmnibus.grimorium.database.GrimoriumContract.SpellTable;
 
-import java.util.ArrayList;
-import java.util.List;
+import androidx.annotation.NonNull;
 
 /**
  * Created by Ohmnibus on 10/09/2016.
@@ -37,7 +34,7 @@ public class SpellDbAdapter extends BaseDbAdapter {
 	}
 
 	public Cursor getCursor() {
-		Cursor c = getDb().query(
+		return getDb().query(
 				SpellTable.TABLE_NAME,
 				null,
 				null, //SpellTable._ID + " = ?",
@@ -46,98 +43,6 @@ public class SpellDbAdapter extends BaseDbAdapter {
 				null,
 				SORT_DEFAULT
 		);
-		return c;
-	}
-
-	@Deprecated
-	public Cursor getCursor(String nameFilter, SpellFilter spellFilter) {
-		String whereClause = "";
-		String whereSep = "";
-		List<String> whereArgs = new ArrayList<>();
-
-		if (! TextUtils.isEmpty(nameFilter)) {
-			whereClause += whereSep + SpellTable.COLUMN_NAME_NAME + " LIKE ? ";
-			whereSep = WHERE_SEP;
-			whereArgs.add(nameFilter);
-		}
-
-		if (spellFilter != null && ! spellFilter.isEmpty()) {
-			whereClause += whereSep + getBitTest(
-					SpellTable.COLUMN_NAME_TYPE,
-					spellFilter.getTypes()
-			);
-			whereSep = WHERE_SEP;
-			whereClause += whereSep + getBitTest(
-					SpellTable.COLUMN_NAME_BOOK_BITFIELD,
-					spellFilter.getBooks(),
-					Spell.BOOK_ALL
-			);
-			whereClause += whereSep + getBitTest(
-					SpellTable.COLUMN_NAME_LEVEL,
-					spellFilter.getLevels()
-			);
-			whereClause += whereSep + getBitTest(
-					SpellTable.COLUMN_NAME_SCHOOLS_BITFIELD,
-					spellFilter.getSchools(),
-					Spell.BOOK_ALL
-			);
-			whereClause += whereSep + getBitTest(
-					SpellTable.COLUMN_NAME_SPHERES_BITFIELD,
-					spellFilter.getSpheres(),
-					Spell.BOOK_ALL
-			);
-
-			if (spellFilter.isComponent(Spell.COMP_VERBAL)) {
-				whereClause += whereSep + getCompoTest(
-						SpellTable.COLUMN_NAME_COMPONENTS_BITFIELD,
-						Spell.COMP_VERBAL
-				);
-			}
-			if (spellFilter.isComponent(Spell.COMP_SOMATIC)) {
-				whereClause += whereSep + getCompoTest(
-						SpellTable.COLUMN_NAME_COMPONENTS_BITFIELD,
-						Spell.COMP_SOMATIC
-				);
-			}
-			if (spellFilter.isComponent(Spell.COMP_MATERIAL)) {
-				whereClause += whereSep + getCompoTest(
-						SpellTable.COLUMN_NAME_COMPONENTS_BITFIELD,
-						Spell.COMP_VERBAL
-				);
-			}
-		}
-
-
-		Cursor c;
-		if (TextUtils.isEmpty(whereClause)) {
-			c = getCursor();
-		} else {
-			c = getDb().query(
-					SpellTable.TABLE_NAME,
-					null,
-					whereClause,
-					whereArgs.toArray(new String[whereArgs.size()]),
-					null,
-					null,
-					SORT_DEFAULT
-			);
-		}
-		return c;
-	}
-
-	protected String getCompoTest(String field, int component) {
-		return String.format("((%1$s & %2$d) = 0) ",
-				field, component);
-	}
-
-	protected String getBitTest(String field, long filterValue) {
-		return String.format("((%1$s & %2$d) <> 0) ",
-				field, filterValue);
-	}
-
-	protected String getBitTest(String field, long filterValue, long defaultValue) {
-		return String.format("(%1$s = %3$d Or (%1$s & %2$d) <> 0) ",
-				field, filterValue, defaultValue);
 	}
 
 	public Spell get(long sourceId, int spellUid) {
@@ -271,8 +176,6 @@ public class SpellDbAdapter extends BaseDbAdapter {
 					retVal = SET_SKIPPED;
 				}
 			} else {
-//				retVal = insert(spell, true);
-//				spell.setId(retVal);
 				long newId = insert(spell, true);
 				if (newId > 0) {
 					spell.setId(newId);
@@ -283,7 +186,6 @@ public class SpellDbAdapter extends BaseDbAdapter {
 			}
 		} catch (Exception ex) {
 			Log.e(TAG, "set", ex);
-			//retVal = -1;
 			retVal = SET_ERROR;
 			handleQueryException(ex);
 		} finally {
@@ -293,44 +195,32 @@ public class SpellDbAdapter extends BaseDbAdapter {
 		return retVal;
 	}
 
-	public long insert(Spell spell) {
-		return insert(spell, false);
-	}
-
 	public long insert(Spell spell, boolean inTransaction) {
 		long retVal;
 
-//		if (! inTransaction) getDb().beginTransaction();
+		if (! inTransaction) getDb().beginTransaction();
 
 		try {
 			ContentValues values = getContentValues(spell);
 
 			retVal = getDb().insert(SpellTable.TABLE_NAME, null, values);
 
-			//if (! inTransaction) getDb().setTransactionSuccessful();
+			if (! inTransaction) getDb().setTransactionSuccessful();
 		} catch (Exception ex) {
 			Log.e(TAG, "insert", ex);
 			retVal = -1;
 			handleQueryException(ex);
-//		} finally {
-//			if (! inTransaction) getDb().endTransaction();
+		} finally {
+			if (! inTransaction) getDb().endTransaction();
 		}
 
 		return retVal;
 	}
 
-	public int update(Spell spell) {
-		return update(spell.getId(), spell);
-	}
-
-	public int update(long spellId, Spell spell) {
-		return update(spellId, spell, false);
-	}
-
 	public int update(long spellId, Spell spell, boolean inTransaction) {
 		int retVal;
 
-//		if (! inTransaction) getDb().beginTransaction();
+		if (! inTransaction) getDb().beginTransaction();
 
 		try {
 			ContentValues values = getContentValues(spell);
@@ -345,31 +235,44 @@ public class SpellDbAdapter extends BaseDbAdapter {
 					whereClause,
 					whereArgs);
 
-//			if (! inTransaction) getDb().setTransactionSuccessful();
+			if (! inTransaction) getDb().setTransactionSuccessful();
 		} catch (Exception ex) {
 			Log.e(TAG, "insert", ex);
 			retVal = -1;
 			handleQueryException(ex);
-//		} finally {
-//			if (! inTransaction) getDb().endTransaction();
+		} finally {
+			if (! inTransaction) getDb().endTransaction();
 		}
 
 		return retVal;
 	}
 
-	public int delete(long spellId) {
-		return delete(spellId, false);
+	@SuppressWarnings("unused")
+	public int delete(long spellId, boolean inTransaction) {
+
+		String whereClause = SpellTable._ID + " = ?";
+
+		String[] whereArgs = { Long.toString(spellId) };
+
+		return delete(whereClause, whereArgs, inTransaction);
 	}
 
-	public int delete(long spellId, boolean inTransaction) {
+	public int deleteBySource(long sourceId, boolean inTransaction) {
+
+		String whereClause = SpellTable.COLUMN_NAME_SOURCE + " = ?";
+
+		String[] whereArgs = { Long.toString(sourceId) };
+
+		return delete(whereClause, whereArgs, inTransaction);
+	}
+
+	private int delete(@NonNull String whereClause, @NonNull String[] whereArgs, boolean inTransaction) {
+
 		int retVal;
 
 		if (! inTransaction) getDb().beginTransaction();
 
 		try {
-			String whereClause = SpellTable._ID + " = ?";
-
-			String[] whereArgs = { Long.toString(spellId) };
 
 			retVal = getDb().delete(
 					SpellTable.TABLE_NAME,
@@ -390,7 +293,7 @@ public class SpellDbAdapter extends BaseDbAdapter {
 
 	/**
 	 * Mark all spells from a given source as "not updated".<br />
-	 * All spell "not updated" afted an import should be deleted.<br />
+	 * All spell "not updated" after an import should be deleted.<br />
 	 * See {@link #purgeDeletedBySource(long, boolean)}.
 	 * @param sourceId Source ID
 	 * @param inTransaction Set to true id the call is inside a transaction.
@@ -466,18 +369,6 @@ public class SpellDbAdapter extends BaseDbAdapter {
 		}
 
 		return retVal;
-	}
-
-
-	public int deleteBySource(long sourceId) {
-		String whereClause = SpellTable.COLUMN_NAME_SOURCE + " = ?";
-
-		String[] whereArgs = { Long.toString(sourceId) };
-
-		return getDb().delete(
-				SpellTable.TABLE_NAME,
-				whereClause,
-				whereArgs);
 	}
 
 	public int getCountBySource(long sourceId) {

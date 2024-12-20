@@ -15,10 +15,13 @@ package net.ohmnibus.grimorium.adapter;/*
  *
  */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.provider.BaseColumns;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -27,25 +30,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
-	private Context mContext;
-
 	private Cursor mCursor;
 
 	private boolean mDataValid;
 
 	private int mRowIdColumn;
 
-	private DataSetObserver mDataSetObserver;
+	private final DataSetObserver mDataSetObserver;
 
-	public CursorRecyclerViewAdapter(Context context, Cursor cursor) {
-		mContext = context;
-//		mCursor = cursor;
-//		mDataValid = cursor != null;
-//		mRowIdColumn = mDataValid ? mCursor.getColumnIndex(BaseColumns._ID) : -1;
-//		mDataSetObserver = new NotifyingDataSetObserver();
-//		if (mCursor != null) {
-//			mCursor.registerDataSetObserver(mDataSetObserver);
-//		}
+	public CursorRecyclerViewAdapter(@SuppressWarnings("unused") Context context, Cursor cursor) {
 		mDataSetObserver = new NotifyingDataSetObserver();
 		swapCursor(cursor);
 	}
@@ -78,7 +71,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
 	public abstract void onBindViewHolder(VH viewHolder, int position, Cursor cursor);
 
 	@Override
-	public void onBindViewHolder(VH viewHolder, int position) {
+	public void onBindViewHolder(@NonNull VH viewHolder, int position) {
 		if (!mDataValid) {
 			throw new IllegalStateException("this should only be called when the cursor is valid");
 		}
@@ -104,6 +97,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
 	 * {@link #changeCursor(Cursor)}, the returned old Cursor is <em>not</em>
 	 * closed.
 	 */
+	@SuppressLint("NotifyDataSetChanged")
 	public Cursor swapCursor(Cursor newCursor) {
 		if (newCursor == mCursor) {
 			return null;
@@ -124,12 +118,12 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
 			mRowIdColumn = -1;
 			mDataValid = false;
 			notifyDataSetChanged();
-			//There is no notifyDataSetInvalidated() method in RecyclerView.Adapter
 		}
 		return oldCursor;
 	}
 
 	private class NotifyingDataSetObserver extends DataSetObserver {
+		@SuppressLint("NotifyDataSetChanged")
 		@Override
 		public void onChanged() {
 			super.onChanged();
@@ -137,12 +131,12 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
 			notifyDataSetChanged();
 		}
 
+		@SuppressLint("NotifyDataSetChanged")
 		@Override
 		public void onInvalidated() {
 			super.onInvalidated();
 			mDataValid = false;
 			notifyDataSetChanged();
-			//There is no notifyDataSetInvalidated() method in RecyclerView.Adapter
 		}
 	}
 }

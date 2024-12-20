@@ -3,6 +3,8 @@ package net.ohmnibus.grimorium.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
+import net.ohmnibus.grimorium.R;
 import net.ohmnibus.grimorium.database.BaseCursorLoader;
 import net.ohmnibus.grimorium.database.GrimoriumContract.SpellTable;
 import net.ohmnibus.grimorium.database.GrimoriumContract.StarTable;
@@ -34,15 +37,15 @@ public class SpellCursorAdapter extends CursorRecyclerViewAdapter<SpellCursorAda
 
 	private static final int LOADER_SPELL_LIST = 0x00aa;
 
-	private Fragment mFragment;
+	private final Fragment mFragment;
 	private long mProfileId;
-	private int mResId;
-	private LayoutInflater mInflater = null;
+	private final int mResId;
+	private final LayoutInflater mInflater;
 	private CharSequence mQuery;
 
 	private OnItemEventListener mOnItemEventListener = null;
 
-	public SpellCursorAdapter(Fragment fragment, long profileId, int resourceId) {
+	public SpellCursorAdapter(@NonNull Fragment fragment, long profileId, int resourceId) {
 		super(fragment.getContext(), null);
 		mFragment = fragment;
 		mProfileId = profileId;
@@ -61,8 +64,9 @@ public class SpellCursorAdapter extends CursorRecyclerViewAdapter<SpellCursorAda
 		viewHolder.bindAllViews(cursor);
 	}
 
+	@NonNull
 	@Override
-	public SpellViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	public SpellViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		SpellViewHolder retVal;
 
 		View convertView = mInflater.inflate(mResId, parent, false);
@@ -94,37 +98,35 @@ public class SpellCursorAdapter extends CursorRecyclerViewAdapter<SpellCursorAda
 	}
 
 	private void initLoader() {
-		mFragment.getLoaderManager().initLoader(LOADER_SPELL_LIST, null, this);
+		LoaderManager.getInstance(mFragment).initLoader(LOADER_SPELL_LIST, null, this);
 	}
 
 	private void refresh() {
-		mFragment.getLoaderManager().restartLoader(LOADER_SPELL_LIST, null, this);
+		LoaderManager.getInstance(mFragment).restartLoader(LOADER_SPELL_LIST, null, this);
 	}
 
+	@NonNull
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		return new SpellCursorLoader(mFragment.getContext(), mProfileId, mQuery);
 	}
 
-	private Handler mHandler = new Handler();
+	private final Handler mHandler = new Handler();
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+	public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
 
 		changeCursor(data);
 
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				if (mOnItemEventListener != null) {
-					mOnItemEventListener.onDataReady(SpellCursorAdapter.this);
-				}
+		mHandler.post(() -> {
+			if (mOnItemEventListener != null) {
+				mOnItemEventListener.onDataReady(SpellCursorAdapter.this);
 			}
 		});
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
+	public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 		//NOOP
 	}
 
@@ -179,7 +181,6 @@ public class SpellCursorAdapter extends CursorRecyclerViewAdapter<SpellCursorAda
 		SpellViewHolder(View baseView, boolean jumpConstructor) {
 			super(baseView);
 			if (! jumpConstructor) {
-				//findAllViews(baseView);
 
 				mBinding = DataBindingUtil.bind(baseView);
 
@@ -191,7 +192,6 @@ public class SpellCursorAdapter extends CursorRecyclerViewAdapter<SpellCursorAda
 			mId = cursor.getLong(IDX_SPELL_ID);
 
 			Context ctx = itemView.getContext();
-			//SpellFormatter spellFmt = new SpellFormatter(ctx, data);
 
 			mBinding.lblLevel.setText(
 					SpellFormatter.getLevel(ctx, cursor.getInt(IDX_SPELL_LEVEL))
@@ -206,9 +206,13 @@ public class SpellCursorAdapter extends CursorRecyclerViewAdapter<SpellCursorAda
 			);
 			mBinding.cbxPreferred.setOnCheckedChangeListener(this);
 
-			String star = cursor.getInt(IDX_SPELL_REVERSIBLE) == 1 ? "*" : "";
+			String star = cursor.getInt(IDX_SPELL_REVERSIBLE) == 1
+					? ctx.getString(R.string.lbl_spell_reversible_star)
+					: ctx.getString(R.string.lbl_spell_reversible_no_star);
 			mBinding.lblName.setText(
-					cursor.getString(IDX_SPELL_NAME) + star
+					ctx.getString(R.string.lbl_spell_name_and_star,
+						cursor.getString(IDX_SPELL_NAME),
+						star)
 			);
 
 			if (cursor.getInt(IDX_SPELL_TYPE) == Spell.TYPE_CLERICS) {
@@ -230,8 +234,8 @@ public class SpellCursorAdapter extends CursorRecyclerViewAdapter<SpellCursorAda
 		public void onClick(View view) {
 			onViewHolderClick(
 					view,
-					getAdapterPosition(),
-					mId //getItemId()
+					getBindingAdapterPosition(),
+					mId
 			);
 		}
 
@@ -239,16 +243,16 @@ public class SpellCursorAdapter extends CursorRecyclerViewAdapter<SpellCursorAda
 		public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 			onViewHolderCheckedChanged(
 					compoundButton,
-					getAdapterPosition(),
-					mId, //getItemId(),
+					getBindingAdapterPosition(),
+					mId,
 					isChecked);
 		}
 	}
 
 	private static class SpellCursorLoader extends BaseCursorLoader {
 
-		private CharSequence mQuery;
-		private long mProfileId;
+		private final CharSequence mQuery;
+		private final long mProfileId;
 
 		private SpellCursorLoader(Context context, long profileId, CharSequence query) {
 			super(context);

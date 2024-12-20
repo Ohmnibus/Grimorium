@@ -3,6 +3,8 @@ package net.ohmnibus.grimorium.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -25,7 +27,7 @@ import net.ohmnibus.grimorium.entity.Profile;
 public class ProfileListCursorAdapter extends CursorRecyclerViewAdapter<ProfileListCursorAdapter.ProfileViewHolder>
 		implements LoaderManager.LoaderCallbacks<Cursor> {
 
-	public static final long ID_PROFILE_NONE = -2;
+	//public static final long ID_PROFILE_NONE = -2;
 	public static final long ID_PROFILE_DEFAULT = -1;
 
 	private static final long ID_PROFILE_ADD = -3;
@@ -56,8 +58,9 @@ public class ProfileListCursorAdapter extends CursorRecyclerViewAdapter<ProfileL
 		initLoader();
 	}
 
+	@NonNull
 	@Override
-	public ProfileViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	public ProfileViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		ProfileViewHolder retVal;
 
 		if (viewType == TYPE_PROFILE) {
@@ -72,7 +75,8 @@ public class ProfileListCursorAdapter extends CursorRecyclerViewAdapter<ProfileL
 	}
 
 	@Override
-	public void onBindViewHolder(ProfileViewHolder viewHolder, int position) {
+	public void onBindViewHolder(@NonNull ProfileViewHolder viewHolder, int position) {
+		//noinspection StatementWithEmptyBody
 		if (isAddItem(position)) {
 			//NOOP
 		} else {
@@ -216,10 +220,10 @@ public class ProfileListCursorAdapter extends CursorRecyclerViewAdapter<ProfileL
 		protected void findAllViews(View baseView) {
 			mRoot = baseView;
 			mRoot.setOnClickListener(this);
-			mName = (TextView) baseView.findViewById(R.id.name);
-			mEdit = (ImageButton) baseView.findViewById(R.id.edit);
+			mName = baseView.findViewById(R.id.name);
+			mEdit = baseView.findViewById(R.id.edit);
 			mEdit.setOnClickListener(this);
-			mDelete = (ImageButton) baseView.findViewById(R.id.remove);
+			mDelete = baseView.findViewById(R.id.remove);
 			mDelete.setOnClickListener(this);
 		}
 
@@ -234,30 +238,22 @@ public class ProfileListCursorAdapter extends CursorRecyclerViewAdapter<ProfileL
 				mEdit.setVisibility(View.VISIBLE);
 				mDelete.setVisibility(View.VISIBLE);
 			}
-			boolean isSelected = false;
-			isSelected = isSelected || mCurrentProfileId == mProfile.getId();
+			boolean isSelected = mCurrentProfileId == mProfile.getId();
 			isSelected = isSelected || mCurrentProfileId == ID_PROFILE_DEFAULT && mProfile.getKey().equals(Profile.PROFILE_KEY_DEFAULT);
-//			if (isSelected) {
-//				//TODO: Make this prettier
-//				mName.setText("* " + item.getName());
-//			}
 			itemView.setSelected(isSelected);
 		}
 
 		@Override
 		public void onClick(View view) {
-			switch (view.getId()) {
-				case R.id.edit:
-					onEditItemClickListener(view, mPosition, mProfile.getId(), mProfile.getKey());
-					break;
-				case R.id.remove:
-					onRemoveItemClickListener(view, mPosition, mProfile.getId(), mProfile.getKey());
-					break;
-				default:
-					//Item selected
-					setCurrentProfile(mProfile.getId());
-					onItemClickListener(view, mPosition, mProfile.getId(), mProfile.getKey());
-					break;
+			long viewId = view.getId();
+			if (viewId == R.id.edit) {
+				onEditItemClickListener(view, mPosition, mProfile.getId(), mProfile.getKey());
+			} else if (viewId == R.id.remove) {
+				onRemoveItemClickListener(view, mPosition, mProfile.getId(), mProfile.getKey());
+			} else {
+				//Item selected
+				setCurrentProfile(mProfile.getId());
+				onItemClickListener(view, mPosition, mProfile.getId(), mProfile.getKey());
 			}
 		}
 	}
@@ -265,8 +261,8 @@ public class ProfileListCursorAdapter extends CursorRecyclerViewAdapter<ProfileL
 	protected class ProfileAddViewHolder extends ProfileViewHolder
 			implements View.OnClickListener {
 
-		View mRoot;
-		//ImageButton mAdd;
+		@SuppressWarnings("FieldCanBeLocal")
+		private View mRoot;
 
 		public ProfileAddViewHolder(View itemView) {
 			super(itemView);
@@ -275,8 +271,6 @@ public class ProfileListCursorAdapter extends CursorRecyclerViewAdapter<ProfileL
 
 		protected void findAllViews(View baseView) {
 			mRoot = baseView;
-			//mAdd = (ImageButton)baseView.findViewById(R.id.add);
-			//mAdd.setOnClickListener(this);
 			mRoot.setOnClickListener(this);
 		}
 
@@ -295,25 +289,26 @@ public class ProfileListCursorAdapter extends CursorRecyclerViewAdapter<ProfileL
 	//region AsyncTaskLoader
 
 	private void initLoader() {
-		mFragment.getLoaderManager().initLoader(LOADER_PROFILE_LIST, null, this);
+		LoaderManager.getInstance(mFragment).initLoader(LOADER_PROFILE_LIST, null, this);
 	}
 
 	private void restartLoader() {
-		mFragment.getLoaderManager().restartLoader(LOADER_PROFILE_LIST, null, this);
+		LoaderManager.getInstance(mFragment).restartLoader(LOADER_PROFILE_LIST, null, this);
 	}
 
+	@NonNull
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		return new ProfileCursorLoader(mFragment.getContext());
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+	public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
 		changeCursor(data);
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
+	public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 		//NOOP
 	}
 
