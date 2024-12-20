@@ -9,11 +9,53 @@ Grimorium is an handy reference to AD&D 2nd edition spells.
 - Define a different filter for each wizard or priest
 - Mark favourite spells for each wizard or priest
 
-## Spell libraries
+## How it works
+
+Grimorium reads online _Spell Libraries_ containing AD&D 2nd spells and prayers, and create a
+local cache to perform quick search and filter.
+
+Filters can be defined for each different profiles (_Magic users_) that can be quickly switched.
+
+## Spell Libraries
 
 Spell libraries are collections of spell in _json_ format.
 
+_Grimorium_ reads spell libraries in order to create a cache to perform quick search and filter.
+
+### Create a new library
+
+The app contains a link to some existing _Spell Libraries_, but anyone with a minimal knowledge
+in _[json](https://en.wikipedia.org/wiki/JSON)_ can create his own following these simple
+steps:
+- Define a new spell library following the structure defined below. Pay attention to the
+`version` and `nameSpace` fields
+- Publish the spell library online with the `UTF-8` character encoding
+- From _Grimorium_, go to the _Spell libraries_ menu and add a new library. When asked, enter
+the spell library URL
+
+If the library contains no errors will be imported in the _Grimorium_ cache.
+
+### Update an existing library
+
+To update an existing library: 
+- Download the library
+- Apply desired changes
+- Increase the value in the `version` field
+- Publish the updated version online
+- If the URL is the same, go to the _Spell libraries_, select the library and hit the refresh
+button
+- If the URL changed, just import it as if is a new library
+
+Keep in mind that if the `version` field is not updated, the refresh button won't work.
+
+## Spell Libraries structure
+
 Each library contains an header and an array of spells.
+
+### Library header
+
+The library header contains information about the library, included it's unique id (`nameSpace`)
+and version.
 
 ```json
 {
@@ -39,7 +81,7 @@ with the same _nameSpace_.
 
 `spells`: The array of the spells defined in this library.
 
-### Spells
+### Spell list
 
 Each spell in the `spells` array is defined as follow:
 

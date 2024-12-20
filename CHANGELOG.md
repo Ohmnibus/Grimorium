@@ -1,5 +1,6 @@
+# Change log
 
-## 0.9.3.0 (28)
+## [0.9.3.0] (28)
 - Removed ADs and In-App purchase
 - Removed support for legacy profiles
 - Dropped support for Android 4.3 and lower
