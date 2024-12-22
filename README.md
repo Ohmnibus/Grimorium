@@ -9,6 +9,10 @@ Grimorium is an handy reference to AD&D 2nd edition spells.
 - Define a different filter for each wizard or priest
 - Mark favourite spells for each wizard or priest
 
+<img src="deploy/SS-01.png" width="180" height="320">
+<img src="deploy/SS-02.png" width="180" height="320">
+<img src="deploy/SS-04.png" width="180" height="320">
+
 ## How it works
 
 Grimorium reads online _Spell Libraries_ containing AD&D 2nd spells and prayers, and create a
