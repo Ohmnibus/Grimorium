@@ -9,9 +9,9 @@ Grimorium is an handy reference to AD&D 2nd edition spells.
 - Define a different filter for each wizard or priest
 - Mark favourite spells for each wizard or priest
 
-<img src="deploy/SS-01.png" width="180" height="320">
-<img src="deploy/SS-02.png" width="180" height="320">
-<img src="deploy/SS-04.png" width="180" height="320">
+<img src="metadata/net.ohmnibus.grimorium.adnd/en-US/images/phoneScreenshots/1.png" width="180" height="320">
+<img src="metadata/net.ohmnibus.grimorium.adnd/en-US/images/phoneScreenshots/2.png" width="180" height="320">
+<img src="metadata/net.ohmnibus.grimorium.adnd/en-US/images/phoneScreenshots/4.png" width="180" height="320">
 
 ## How it works
 
