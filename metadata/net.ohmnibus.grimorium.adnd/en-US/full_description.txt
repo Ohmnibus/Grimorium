@@ -1,0 +1,10 @@
+An handy reference to AD&D 2nd edition spells and prayers.
+
+<b>Key features</b>
+
+* Access multiple online spell libraries
+* Powerful filtering system
+* Search while typing
+* Create any number of wizards or priests
+* Define a different filter for each wizard or priest
+* Mark favourite spells for each wizard or priest
