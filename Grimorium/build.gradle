@@ -7,8 +7,8 @@ android {
         applicationId "net.ohmnibus.grimorium"
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 29
-        versionName "0.9.3.1"
+        versionCode 30
+        versionName "0.9.3.2"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
 
@@ -19,11 +19,15 @@ android {
     buildTypes {
         debug {
             versionNameSuffix " free"
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            multiDexEnabled false
         }
         release {
             applicationIdSuffix ".adnd"
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            multiDexEnabled false
         }
     }
 
@@ -33,8 +37,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.startup:startup-runtime:1.1.0"
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.browser:browser:1.5.0' //Used by some library
     implementation 'androidx.recyclerview:recyclerview:1.3.0'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

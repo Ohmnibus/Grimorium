@@ -6,12 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.text.HtmlCompat;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.CheckBoxPreference;
@@ -39,6 +37,10 @@ import java.util.Set;
  */
 public class SpellFilterFragment extends PreferenceFragmentCompat
 implements Preference.OnPreferenceChangeListener {
+
+	static {
+		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+	}
 
 	@Override
 	public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
