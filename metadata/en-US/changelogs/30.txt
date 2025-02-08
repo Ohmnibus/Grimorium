@@ -1,0 +1,4 @@
+- Removed ADs and In-App purchase
+- Removed support for legacy profiles
+- Dropped support for Android 4.3 and lower
+- Fixed compa
