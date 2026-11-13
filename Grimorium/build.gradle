@@ -4,7 +4,7 @@ android {
     compileSdkVersion 33
 
     defaultConfig {
-        applicationId "net.ohmnibus.grimorium"
+        applicationId "net.ohmnibus.grimorium.adnd"
         minSdkVersion 19
         targetSdkVersion 33
         versionCode 33
@@ -18,13 +18,12 @@ android {
 
     buildTypes {
         debug {
-            versionNameSuffix " free"
+            versionNameSuffix " debug"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             multiDexEnabled false
         }
         release {
-            applicationIdSuffix ".adnd"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             multiDexEnabled false

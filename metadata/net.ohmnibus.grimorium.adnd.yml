@@ -1,12 +1,12 @@
 Categories:
   - Game Helper
-  - Role-playing Game
+  - Role-Playing Game
 License: GPL-3.0-only
 WebSite: https://www.ohmnibus.net/en
 SourceCode: https://github.com/Ohmnibus/Grimorium
 IssueTracker: https://github.com/Ohmnibus/Grimorium/issues
 Changelog: https://github.com/Ohmnibus/Grimorium/blob/main/CHANGELOG.md
-Donate:
+Donate: 
   https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JZSAC6BX5N9NN
 
 AutoName: Grimorium for AD&D
@@ -16,7 +16,7 @@ Repo: https://github.com/Ohmnibus/Grimorium.git
 Binaries: https://github.com/Ohmnibus/Grimorium/releases/download/%v/Grimorium-%v.apk
 
 Builds:
-  - versionName: 0.9.3.3
+  - versionName: 0.9.3.4
     versionCode: 33
     commit: 0.9.3.4
     subdir: Grimorium
