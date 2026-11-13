@@ -15,16 +15,9 @@ Binaries: https://github.com/Ohmnibus/Grimorium/releases/download/%v/Grimorium-%
 AllowedAPKSigningKeys: ec54bc6e3f748f912db45e4f206e22671c0d96cdb6bbe796456f0be856871a2b
 
 Builds:
-  - versionName: 0.9.3.1
-    versionCode: 29
-    commit: 0.9.3.1
-    subdir: Grimorium
-    gradle:
-      - yes
-
-  - versionName: 0.9.3.2
-    versionCode: 31
-    commit: 0.9.3.2
+  - versionName: 0.9.3.3
+    versionCode: 32
+    commit: 0.9.3.3
     subdir: Grimorium
     gradle:
       - yes
@@ -32,5 +25,5 @@ Builds:
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
 UpdateCheckName: net.ohmnibus.grimorium.adnd
-CurrentVersion: 0.9.3.2
-CurrentVersionCode: 31
+CurrentVersion: 0.9.3.3
+CurrentVersionCode: 32

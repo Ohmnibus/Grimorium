@@ -1,5 +1,11 @@
 # Change log
 
+## [0.9.3.3] (32)
+[0.9.3.3]: https://github.com/Ohmnibus/Grimorium/releases/tag/0.9.3.3
+
+- Fix for FDroid
+- Optimized apk size
+
 ## [0.9.3.2] (31)
 [0.9.3.2]: https://github.com/Ohmnibus/Grimorium/releases/tag/0.9.3.2
 
