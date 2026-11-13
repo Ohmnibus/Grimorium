@@ -142,6 +142,7 @@
 	<string name="lbl_source_hint">Enter spell library URL</string>
 	<string name="lbl_source_error">The spell library cannot be read for unknown cause.</string>
 	<string name="lbl_source_error_cannot_connect">Cannot find the spell library.</string>
+	<string name="lbl_source_error_security_protocol">Connection failed due invalid security protocol.</string>
 	<string name="lbl_source_error_cannot_read">Cannot read the spell library.</string>
 	<string name="lbl_source_error_format_unsupported">This spell library is too advanced. Try updating the app.</string>
 	<string name="lbl_source_error_format_invalid">This spell library is unreadable, maybe damaged by woodworms.</string>

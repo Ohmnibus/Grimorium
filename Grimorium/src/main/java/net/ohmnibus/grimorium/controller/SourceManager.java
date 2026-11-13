@@ -125,6 +125,9 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 			case OnSourceImportedListener.ERR_CANNOT_CONNECT:
 				message = context.getString(R.string.lbl_source_error_cannot_connect);
 				break;
+			case OnSourceImportedListener.ERR_SECURITY_PROTOCOL:
+				message = context.getString(R.string.lbl_source_error_security_protocol);
+				break;
 			case OnSourceImportedListener.ERR_STALE_DATA:
 				message = context.getString(R.string.lbl_source_error_stale_data);
 				break;
@@ -351,6 +354,10 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 
 				retVal = privateImport(url, stream);
 
+			} catch (javax.net.ssl.SSLException e) {
+				retVal = new ImportResult();
+				retVal.status = OnSourceImportedListener.ERR_SECURITY_PROTOCOL;
+				Log.e(TAG, "privateImport", e);
 			} catch (IOException e) {
 				retVal = new ImportResult();
 				retVal.status = OnSourceImportedListener.ERR_CANNOT_CONNECT;
@@ -579,6 +586,8 @@ public class SourceManager implements LoaderManager.LoaderCallbacks<SourceManage
 		int ERR_INVALID_URL = 7;
 		/** Generic error */
 		int ERR_GENERIC = 8;
+		/** Error establishing secure connection */
+		int ERR_SECURITY_PROTOCOL = 9;
 
 		/**
 		 * Called when a source has been imported.

@@ -15,3 +15,8 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keep class androidx.drawerlayout.widget.DrawerLayout
+-keep class android.graphics.drawable.RippleDrawable
+-keep class com.google.android.material.appbar.AppBarLayout
+-keep class android.view.accessibility.AccessibilityNodeInfo

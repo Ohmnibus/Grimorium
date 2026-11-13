@@ -1,5 +1,16 @@
 package net.ohmnibus.grimorium;
 
+import java.util.ArrayList;
+
+import android.app.Activity;
+import android.app.Application;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
+
 import net.ohmnibus.grimorium.database.DbManager;
 import net.ohmnibus.grimorium.entity.Profile;
 import net.ohmnibus.grimorium.entity.ads.MobileAdsWrapper;
@@ -7,17 +18,6 @@ import net.ohmnibus.grimorium.entity.firebase.FirebaseAppWrapper;
 import net.ohmnibus.grimorium.entity.firebase.FirebaseCrashWrapper;
 import net.ohmnibus.grimorium.helper.SourceCache;
 import net.ohmnibus.grimorium.helper.iab.BillingClientHelper;
-
-import android.app.Activity;
-import android.app.Application;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-
-import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
-import android.util.Log;
-
-import java.util.ArrayList;
 
 public class GrimoriumApp extends Application
 	implements DbManager.OnDbInitializedListener {
